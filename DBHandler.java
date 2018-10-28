@@ -21,7 +21,7 @@ public class DBHandler {
 	private static void createConnection() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/password_manager?user="+dbUsername+"&password="+dbPassword+"&useSSL=false");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/password_protector?user="+dbUsername+"&password="+dbPassword+"&useSSL=false");
 		} catch(ClassNotFoundException | SQLException e) {
 			System.out.println(e.getMessage());
 		}
