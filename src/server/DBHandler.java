@@ -1,4 +1,4 @@
-//package csci201.passwordmanager;
+package server;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -82,7 +82,7 @@ public class DBHandler {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("INSERT INTO user (username, master_pass, last_update, email, phone) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+				ps=conn.prepareStatement("INSERT INTO user (username, master_pass, last_update, phone) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 				ps.setString(1, username);
 				ps.setString(2, hash_pass);
 				Calendar cal = new GregorianCalendar();
@@ -90,8 +90,7 @@ public class DBHandler {
 				dateFormat.setCalendar(cal); 
 				String sqlNow = dateFormat.format(cal.getTime());
 				ps.setString(3, sqlNow);
-				ps.setString(4, email);
-				ps.setString(5, phone);
+				ps.setString(4, phone);
 				ps.executeUpdate();
 				rs = ps.getGeneratedKeys();
 				if(rs.next()) { //If successfully inserted return the userID
@@ -125,7 +124,7 @@ public class DBHandler {
 				ps.setInt(1, userID);
 				rs=ps.executeQuery();
 				while(rs.next()) {
-					results.add(new Password(rs.getInt("passwordID"), rs.getString("username"), rs.getString("app_name"), rs.getString("encrypted_pass"), rs.getString("last_update"), rs.getString("suggested_reset")));
+					results.add(new DBPassword(rs.getInt("passwordID"), rs.getString("username"), rs.getString("app_name"), rs.getString("encrypted_pass"), rs.getString("last_update"), rs.getString("suggested_reset")));
 				}
 			} catch(SQLException e) {
 				System.out.println(e.getMessage());
@@ -155,7 +154,7 @@ public class DBHandler {
 				ps.setInt(1, passwordID);
 				rs=ps.executeQuery();
 				while(rs.next()) {
-					results.add(new SecurityQuestion(rs.getString("question"),rs.getString("answer")));
+					results.add(new DBSecurityQuestion(rs.getString("question"),rs.getString("answer")));
 				}
 			} catch(SQLException e) {
 				System.out.println(e.getMessage());
@@ -237,7 +236,8 @@ class DBPassword {
 	private Date last_update;
 	private Date suggested_reset;
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	DBPassword(int passwordID, String app_name, String encrypted_pass, String last_update, String suggested_reset) {
+	DBPassword(int passwordID, String username, String app_name, String encrypted_pass, String last_update, String suggested_reset) {
+		this.username=username;
 		this.passwordID=passwordID;
 		this.app_name=app_name;
 		this.encrypted_pass=encrypted_pass;
