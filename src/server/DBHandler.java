@@ -18,13 +18,17 @@ public class DBHandler {
 	private static String dbUsername = "root";
 	private static String dbPassword= "root";
 	
-	private static void createConnection() {
+	public static boolean createConnection() {
+		boolean created=false;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/password_protector?user="+dbUsername+"&password="+dbPassword+"&useSSL=false");
+			created = true;
 		} catch(ClassNotFoundException | SQLException e) {
 			System.out.println(e.getMessage());
+			created=false;
 		}
+		return created;
 	}
 	
 	public static void closeConnection() {
