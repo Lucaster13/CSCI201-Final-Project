@@ -7,6 +7,10 @@ public class LoginCredentials {
 	public static final int TYPE_CREATE = 0;
 	public static final int TYPE_LOGIN = 1;
 	
+	public LoginCredentials(String username, String hashpass) {
+		this(username, hashpass, TYPE_LOGIN);
+	}
+	
 	public LoginCredentials(String username, String hashpass, int type) {
 		this.username=username;
 		this.hashpass=hashpass;

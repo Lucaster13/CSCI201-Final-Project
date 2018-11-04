@@ -45,21 +45,21 @@ public class DBHandler {
 	/*
 		Query the database to verify the the given username and hash password match exist.
 		
-		Returns the user's ID if credentials match or 0 if verification fails.
+		Returns the user's info if credentials match or null if verification fails.
 	*/
-	public static int verifyUser(String name, String hash_pass) {
-		int userID=0;
+	public static DBUserInfo verifyUser(String name, String hash_pass) {
+		DBUserInfo info = null;
 		if(conn==null) createConnection();
 		if(conn != null) {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("SELECT userID FROM user WHERE username=? AND master_pass=?");
+				ps=conn.prepareStatement("SELECT userID, username, last_update, phone FROM user WHERE username=? AND master_pass=?");
 				ps.setString(1, name);
 				ps.setString(2, hash_pass);
 				rs=ps.executeQuery();
 				if(rs.next()) { //Check that the user exists
-					userID=rs.getInt("user");
+					info=new DBUserInfo(rs.getInt("userID"), rs.getString("username"), rs.getString("last_update"), rs.getString("phone"));
 				}
 			} catch(SQLException e) {
 				System.out.println(e.getMessage());
@@ -71,34 +71,45 @@ public class DBHandler {
 				}
 			}
 		}
-		return userID;
+		return info;
 	}
 
 	/*
 		Creates a new user in the database with the user info passed as parameters
 		
-		Returns the userID of the created user or 0 if action failed.
+		Returns the userID of the created user, -1 if username already in use or 0 if action failed.
 	*/
-	public static int createUser(String username, String hash_pass, String email, String phone) {
+	public static int createUser(String username, String hash_pass, String phone) {
 		int userID=0;
 		if(conn==null) createConnection();
 		if(conn != null) {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("INSERT INTO user (username, master_pass, last_update, phone) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+				ps=conn.prepareStatement("SELECT userID, master_pass FROM user WHERE username=?");
 				ps.setString(1, username);
-				ps.setString(2, hash_pass);
-				Calendar cal = new GregorianCalendar();
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				dateFormat.setCalendar(cal); 
-				String sqlNow = dateFormat.format(cal.getTime());
-				ps.setString(3, sqlNow);
-				ps.setString(4, phone);
-				ps.executeUpdate();
-				rs = ps.getGeneratedKeys();
-				if(rs.next()) { //If successfully inserted return the userID
-					userID=rs.getInt(1);
+				rs=ps.executeQuery();
+				if(rs.next()) { //Check if the user exists
+					if(rs.getString("master_pass").equals(hash_pass)) {
+						userID = -1;
+					}
+				} else {
+					if(rs != null) rs.close();
+					if(ps != null) ps.close();
+					ps=conn.prepareStatement("INSERT INTO user (username, master_pass, last_update, phone) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+					ps.setString(1, username);
+					ps.setString(2, hash_pass);
+					Calendar cal = new GregorianCalendar();
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					dateFormat.setCalendar(cal); 
+					String sqlNow = dateFormat.format(cal.getTime());
+					ps.setString(3, sqlNow);
+					ps.setString(4, phone);
+					ps.executeUpdate();
+					rs = ps.getGeneratedKeys();
+					if(rs.next()) { //If successfully inserted return the userID
+						userID=rs.getInt(1);
+					}
 				}
 			} catch(SQLException e) {
 				System.out.println(e.getMessage());
@@ -115,7 +126,7 @@ public class DBHandler {
 	}
 	
 	/*
-	Returns a list of the stored passwords for the user with the given ID
+		Returns a list of the stored passwords for the user with the given ID
 	*/
 	public static ArrayList<DBPassword> getPasswords(int userID) {
 		ArrayList<DBPassword> results = new ArrayList<DBPassword>();
@@ -145,7 +156,7 @@ public class DBHandler {
 	}
 	
 	/*
-	Returns a list of the security questions for the password with the given ID
+		Returns a list of the security questions for the password with the given ID
 	*/
 	public static ArrayList<DBSecurityQuestion> getSecurityQuestions(int passwordID) {
 		ArrayList<DBSecurityQuestion> results = new ArrayList<DBSecurityQuestion>();
@@ -174,6 +185,11 @@ public class DBHandler {
 		return results;
 	}
 	
+	/* 
+	 	Add a password for the user with the given userID and the given password info
+	 	
+		Returns: true if successful, false otherwise
+	 */
 	public static boolean addPassword(int userID, String username, String app_name, String encrypted_pass, String last_update, String suggested_reset) {
 		boolean success = false;
 		if(conn==null) createConnection();
@@ -204,6 +220,11 @@ public class DBHandler {
 		return success;
 	}
 	
+	/* 
+		Add a security question for the password with the given passwordID and the given question info
+ 	
+		Returns: true if successful, false otherwise
+	*/
 	public static boolean addQuestion(int passwordID, String question, String answer) {
 		boolean success = false;
 		if(conn==null) createConnection();
@@ -229,6 +250,36 @@ public class DBHandler {
 			}
 		}
 		return success;
+	}
+}
+
+class DBUserInfo {
+	private int userID;
+	private String username;
+	private String last_update;
+	private String phone;
+	
+	DBUserInfo(int userID, String username, String last_update, String phone) {
+		this.userID=userID;
+		this.username=username;
+		this.last_update=last_update;
+		this.phone=phone;
+	}
+	
+	int getUserID() {
+		return userID;
+	}
+	
+	String getUsername() {
+		return username;
+	}
+	
+	String getLastUpdate() {
+		return last_update;
+	}
+	
+	String getPhone() {
+		return phone;
 	}
 }
 
