@@ -5,6 +5,7 @@ public class LoginCreation extends LoginCredentials {
 	
 	public LoginCreation(String username, String hashpass, String phone) {
 		super(username, hashpass, TYPE_CREATE);
+		this.phone=phone;
 	}
 	
 	public String getPhone() {
