@@ -87,21 +87,22 @@ public class ClientConnection extends Thread {
 					//Send response of success
 					sendMsg(new LoginResponse(LoginResponse.TYPE_SUCCESS));
 					//Send SMS text and await code verification
-					boolean correctCode = false;
 					/*
 					 * SEND TEXT HERE
 					 */
-					//WAIT FOR REPLY OF CODE FROM CLIENT
-					String inputCode = (String) ois.readObject();
-					/*
-					 * CHECK IF CODE RECIEVED MATCHES CODE SENT VIA SMS
-					 */
-					if(!correctCode) {
-						sendMsg(new LoginResponse(LoginResponse.TYPE_FAIL));
-					} else {
-						sendMsg(new LoginResponse(LoginResponse.TYPE_SUCCESS));
-						loggedIn=true;
+					boolean correctCode = false;
+					while(!correctCode) {
+						//WAIT FOR REPLY OF CODE FROM CLIENT
+						String inputCode = (String) ois.readObject();
+						/*
+						 * CHECK IF CODE RECIEVED MATCHES CODE SENT VIA SMS
+						 */
+						if(!correctCode) {
+							sendMsg(new LoginResponse(LoginResponse.TYPE_FAIL));
+						}
 					}
+					sendMsg(new LoginResponse(LoginResponse.TYPE_SUCCESS));
+					loggedIn=true;
 				}
 			} catch(IOException | ClassNotFoundException e) {
 				throw new ClientDisconnectException();
