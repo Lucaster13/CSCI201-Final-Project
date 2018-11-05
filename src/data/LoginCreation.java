@@ -1,6 +1,9 @@
 package data;
 
-public class LoginCreation extends LoginCredentials {
+import java.io.Serializable;
+
+public class LoginCreation extends LoginCredentials implements Serializable {
+	private static final long serialVersionUID = 1;
 	private String phone;
 	
 	public LoginCreation(String username, String hashpass, String phone) {

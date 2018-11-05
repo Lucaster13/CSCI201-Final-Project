@@ -13,6 +13,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import data.Password;
+import data.SecurityQuestion;
+
 public class DBHandler {
 	private static Connection conn = null;
 	private static String dbUsername = "root";
@@ -86,13 +89,11 @@ public class DBHandler {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("SELECT userID, master_pass FROM user WHERE username=?");
+				ps=conn.prepareStatement("SELECT userID FROM user WHERE username=?");
 				ps.setString(1, username);
 				rs=ps.executeQuery();
 				if(rs.next()) { //Check if the user exists
-					if(rs.getString("master_pass").equals(hash_pass)) {
-						userID = -1;
-					}
+					userID = -1;
 				} else {
 					if(rs != null) rs.close();
 					if(ps != null) ps.close();
@@ -128,8 +129,8 @@ public class DBHandler {
 	/*
 		Returns a list of the stored passwords for the user with the given ID
 	*/
-	public static ArrayList<DBPassword> getPasswords(int userID) {
-		ArrayList<DBPassword> results = new ArrayList<DBPassword>();
+	public static ArrayList<Password> getPasswords(int userID) {
+		ArrayList<Password> results = new ArrayList<Password>();
 		if(conn==null) createConnection();
 		if(conn != null) {
 			PreparedStatement ps=null;
@@ -139,7 +140,7 @@ public class DBHandler {
 				ps.setInt(1, userID);
 				rs=ps.executeQuery();
 				while(rs.next()) {
-					results.add(new DBPassword(rs.getInt("passwordID"), rs.getString("username"), rs.getString("app_name"), rs.getString("encrypted_pass"), rs.getString("last_update"), rs.getString("suggested_reset")));
+					results.add(new Password(rs.getInt("passwordID"), rs.getString("username"), rs.getString("app_name"), rs.getString("encrypted_pass"), rs.getString("last_update"), rs.getString("suggested_reset")));
 				}
 			} catch(SQLException e) {
 				System.out.println(e.getMessage());
@@ -158,8 +159,8 @@ public class DBHandler {
 	/*
 		Returns a list of the security questions for the password with the given ID
 	*/
-	public static ArrayList<DBSecurityQuestion> getSecurityQuestions(int passwordID) {
-		ArrayList<DBSecurityQuestion> results = new ArrayList<DBSecurityQuestion>();
+	public static ArrayList<SecurityQuestion> getSecurityQuestions(int passwordID) {
+		ArrayList<SecurityQuestion> results = new ArrayList<SecurityQuestion>();
 		if(conn==null) createConnection();
 		if(conn != null) {
 			PreparedStatement ps=null;
@@ -169,7 +170,7 @@ public class DBHandler {
 				ps.setInt(1, passwordID);
 				rs=ps.executeQuery();
 				while(rs.next()) {
-					results.add(new DBSecurityQuestion(rs.getString("question"),rs.getString("answer")));
+					results.add(new SecurityQuestion(rs.getString("question"),rs.getString("answer")));
 				}
 			} catch(SQLException e) {
 				System.out.println(e.getMessage());
@@ -280,67 +281,5 @@ class DBUserInfo {
 	
 	String getPhone() {
 		return phone;
-	}
-}
-
-class DBPassword {
-	private int passwordID;
-	private String username;
-	private String app_name;
-	private String encrypted_pass;
-	private Date last_update;
-	private Date suggested_reset;
-	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	DBPassword(int passwordID, String username, String app_name, String encrypted_pass, String last_update, String suggested_reset) {
-		this.username=username;
-		this.passwordID=passwordID;
-		this.app_name=app_name;
-		this.encrypted_pass=encrypted_pass;
-		try {
-			this.last_update=dateFormat.parse(last_update);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		try {
-			this.suggested_reset=dateFormat.parse(suggested_reset);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-	int getID() {
-		return passwordID;
-	}
-	String getUsername() {
-		return username;
-	}
-	String getName() {
-		return app_name;
-	}
-	String getPass() {
-		return encrypted_pass;
-	}
-	Date getLastUpdate() {
-		return last_update;
-	}
-	Date getSuggestedReset() {
-		return suggested_reset;
-	}
-	long numDaysUntilReset() {
-		return Math.round((suggested_reset.getTime() - last_update.getTime()) / (double) 86400000);
-	}
-}
-
-class DBSecurityQuestion {
-	private String question;
-	private String answer;
-	DBSecurityQuestion(String question, String answer) {
-		this.question=question;
-		this.answer=answer;
-	}
-	String getQuestion() {
-		return question;
-	}
-	String getAnswer() {
-		return answer;
 	}
 }

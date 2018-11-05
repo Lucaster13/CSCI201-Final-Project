@@ -1,11 +1,15 @@
 package data;
 
-public class LoginCredentials {
+import java.io.Serializable;
+
+public class LoginCredentials implements Serializable {
+	private static final long serialVersionUID = 1;
+	public static final int TYPE_CREATE = 0;
+	public static final int TYPE_LOGIN = 1;
+	
 	private String username;
 	private String hashpass;
 	private int type;
-	public static final int TYPE_CREATE = 0;
-	public static final int TYPE_LOGIN = 1;
 	
 	public LoginCredentials(String username, String hashpass) {
 		this(username, hashpass, TYPE_LOGIN);
