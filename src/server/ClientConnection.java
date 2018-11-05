@@ -12,6 +12,10 @@ import data.LoginCredentials;
 import data.LoginResponse;
 import data.Password;
 import data.PasswordAddRequest;
+import data.PasswordRemoveRequest;
+import data.QuestionAddRequest;
+import data.QuestionGetRequest;
+import data.QuestionRemoveRequest;
 import data.SecurityQuestion;
 import data.ServerResponse;
 
@@ -123,49 +127,25 @@ public class ClientConnection extends Thread {
 				ClientRequest msg = (ClientRequest) ois.readObject();
 				switch(msg.getType()) {
 				case ClientRequest.TYPE_RETRIEVE_PASSWORDS:
-					ArrayList<Password> passwords = DBHandler.getPasswords(userID);
-					sendMsg(passwords);
+					sendPasswordList();
 					break;
 				case ClientRequest.TYPE_ADD_PASSWORD:
-					PasswordAddRequest req = (PasswordAddRequest) msg;
-					/*
-					 * TODO: FIGURE OUT WHAT TO USE FOR LAST UPDATE/SUGGEST RESET
-					 */
-					boolean success = DBHandler.addPassword(userID, req.getUsername(), req.getAppName(), req.getPassword(), "2018-11-04", "2018-11-04");
-					sendMsg(new ServerResponse(success));
-					break;
-				case ClientRequest.TYPE_EDIT_PASSWORD:
-					/*
-					 * TODO: ADD EDITING TO DATABASE
-					 */
+					addPassword((PasswordAddRequest) msg);
 					break;
 				case ClientRequest.TYPE_REMOVE_PASSWORD:
-					/*
-					 * TODO: ADD DELETION FROM DATABASE
-					 */
+					removePassword((PasswordRemoveRequest) msg);
 					break;
 				case ClientRequest.TYPE_RETRIEVE_QUESTIONS:
-					//ArrayList<SecurityQuestion> questions = DBHandler.getSecurityQuestions(passwordID);
-					//sendMsg(questions);
+					sendQuestionList((QuestionGetRequest) msg);
 					break;
 				case ClientRequest.TYPE_ADD_QUESTION:
-					//boolean success = DBHandler.addQuestion(passwordID, question, answer);
-					//sendMsg(new ServerResponse(success));
-					break;
-				case ClientRequest.TYPE_EDIT_QUESTION:
-					/*
-					 * TODO: ADD EDITING TO DATABASE
-					 */
+					addQuestion((QuestionAddRequest) msg);
 					break;
 				case ClientRequest.TYPE_REMOVE_QUESTION:
-					/*
-					 * TODO: ADD DELETION FROM DATABASE
-					 */
+					removeQuestion((QuestionRemoveRequest) msg);
 					break;
 				case ClientRequest.TYPE_DELETE_ACCOUNT:
-					/*
-					 * TODO: ADD ACCOUNT DELETION TO DATABASE
-					 */
+					deleteAccount();
 					break;
 				case ClientRequest.TYPE_LOGOUT:
 					loggedOut=true;
@@ -177,29 +157,46 @@ public class ClientConnection extends Thread {
 			throw new ClientDisconnectException();
 		}
 	}
-}
-
-class TimeoutThread extends Thread {
-	private static final int TIMEOUT_LENGTH = 15;
-	private ClientConnection t;
-	private int minElapsed=0;
 	
-	public TimeoutThread(ClientConnection t) {
-		this.t=t;
+	public void sendPasswordList() throws IOException {
+		ArrayList<Password> passwords = DBHandler.getPasswords(userID);
+		sendMsg(passwords);
 	}
 	
-	public void run() {
-		while(minElapsed < TIMEOUT_LENGTH) {
-			try {
-				Thread.sleep(1000000);
-				minElapsed++;
-			} catch (InterruptedException e) { }
-		}
-		t.interrupt();
+	public void addPassword(PasswordAddRequest request) throws IOException {
+		/*
+		 * TODO: FIGURE OUT WHAT TO USE FOR LAST UPDATE/SUGGEST RESET
+		 */
+		boolean success = DBHandler.addPassword(userID, request.getUsername(), request.getAppName(), request.getPassword(), "2018-11-04", "2018-11-04");
+		sendMsg(new ServerResponse(success));
 	}
 	
-	public void reset() {
-		minElapsed=0;
+	public void removePassword(PasswordRemoveRequest request) throws IOException {
+		/*
+		 * TODO: ADD DELETION FROM DATABASE
+		 */
+	}
+	
+	public void sendQuestionList(QuestionGetRequest request) throws IOException {
+		ArrayList<SecurityQuestion> questions = DBHandler.getSecurityQuestions(request.getPasswordID());
+		sendMsg(questions);
+	}
+	
+	public void addQuestion(QuestionAddRequest request) throws IOException {
+		boolean success = DBHandler.addQuestion(request.getPasswordID(), request.getQuestion(), request.getAnswer());
+		sendMsg(new ServerResponse(success));
+	}
+	
+	public void removeQuestion(QuestionRemoveRequest request) throws IOException {
+		/*
+		 * TODO: ADD DELETION FROM DATABASE
+		 */
+	}
+	
+	public void deleteAccount() throws IOException {
+		/*
+		 * TODO: ADD ACCOUNT DELETION TO DATABASE
+		 */
 	}
 }
 
