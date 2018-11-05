@@ -57,12 +57,12 @@ public class DBHandler {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("SELECT userID, username, last_update, phone FROM user WHERE username=? AND master_pass=?");
+				ps=conn.prepareStatement("SELECT userID, username, last_update, email FROM user WHERE username=? AND master_pass=?");
 				ps.setString(1, name);
 				ps.setString(2, hash_pass);
 				rs=ps.executeQuery();
 				if(rs.next()) { //Check that the user exists
-					info=new DBUserInfo(rs.getInt("userID"), rs.getString("username"), rs.getString("last_update"), rs.getString("phone"));
+					info=new DBUserInfo(rs.getInt("userID"), rs.getString("username"), rs.getString("last_update"), rs.getString("email"));
 				}
 			} catch(SQLException e) {
 				System.out.println(e.getMessage());
@@ -82,7 +82,7 @@ public class DBHandler {
 		
 		Returns the userID of the created user, -1 if username already in use or 0 if action failed.
 	*/
-	public static int createUser(String username, String hash_pass, String phone) {
+	public static int createUser(String username, String hash_pass, String email) {
 		int userID=0;
 		if(conn==null) createConnection();
 		if(conn != null) {
@@ -97,7 +97,7 @@ public class DBHandler {
 				} else {
 					if(rs != null) rs.close();
 					if(ps != null) ps.close();
-					ps=conn.prepareStatement("INSERT INTO user (username, master_pass, last_update, phone) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+					ps=conn.prepareStatement("INSERT INTO user (username, master_pass, last_update, email) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 					ps.setString(1, username);
 					ps.setString(2, hash_pass);
 					Calendar cal = new GregorianCalendar();
@@ -105,7 +105,7 @@ public class DBHandler {
 					dateFormat.setCalendar(cal); 
 					String sqlNow = dateFormat.format(cal.getTime());
 					ps.setString(3, sqlNow);
-					ps.setString(4, phone);
+					ps.setString(4, email);
 					ps.executeUpdate();
 					rs = ps.getGeneratedKeys();
 					if(rs.next()) { //If successfully inserted return the userID
@@ -258,13 +258,13 @@ class DBUserInfo {
 	private int userID;
 	private String username;
 	private String last_update;
-	private String phone;
+	private String email;
 	
-	DBUserInfo(int userID, String username, String last_update, String phone) {
+	DBUserInfo(int userID, String username, String last_update, String email) {
 		this.userID=userID;
 		this.username=username;
 		this.last_update=last_update;
-		this.phone=phone;
+		this.email=email;
 	}
 	
 	int getUserID() {
@@ -279,7 +279,7 @@ class DBUserInfo {
 		return last_update;
 	}
 	
-	String getPhone() {
-		return phone;
+	String getEmail() {
+		return email;
 	}
 }

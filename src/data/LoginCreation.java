@@ -4,14 +4,14 @@ import java.io.Serializable;
 
 public class LoginCreation extends LoginCredentials implements Serializable {
 	private static final long serialVersionUID = 1;
-	private String phone;
+	private String email;
 	
-	public LoginCreation(String username, String hashpass, String phone) {
+	public LoginCreation(String username, String hashpass, String email) {
 		super(username, hashpass, TYPE_CREATE);
-		this.phone=phone;
+		this.email=email;
 	}
 	
-	public String getPhone() {
-		return phone;
+	public String getEmail() {
+		return email;
 	}
 }

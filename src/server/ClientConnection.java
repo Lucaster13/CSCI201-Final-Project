@@ -59,10 +59,10 @@ public class ClientConnection extends Thread {
 				username = msg.getUsername();
 				hashPass = msg.getPassword();
 				boolean correctCreds = false;
-				String phone="";
+				String email="";
 				if(msg.getType()==LoginCredentials.TYPE_CREATE) {
 					LoginCreation info = (LoginCreation) msg;
-					userID = DBHandler.createUser(username, hashPass, info.getPhone());
+					userID = DBHandler.createUser(username, hashPass, info.getEmail());
 					if(userID == -1) { //Username already exists
 						//Send response that username is in use
 						sendMsg(new LoginResponse(LoginResponse.TYPE_INVALID));
@@ -70,7 +70,7 @@ public class ClientConnection extends Thread {
 						//Send response that creation failed
 						sendMsg(new LoginResponse(LoginResponse.TYPE_FAIL));
 					} else {
-						phone = info.getPhone();
+						email = info.getEmail();
 						correctCreds = true;
 					}
 				}
@@ -81,24 +81,22 @@ public class ClientConnection extends Thread {
 						sendMsg(new LoginResponse(LoginResponse.TYPE_INVALID));
 					} else {
 						userID = info.getUserID();
-						phone = info.getPhone();
+						email = info.getEmail();
 						correctCreds = true;
 					}
 				}
 				if(correctCreds) {
 					//Send response of success
 					sendMsg(new LoginResponse(LoginResponse.TYPE_SUCCESS));
-					//Send SMS text and await code verification
-					/*
-					 * SEND TEXT HERE
-					 */
+					//Send email and await code verification
+					EmailSender sendCode = new EmailSender(email);
 					boolean correctCode = false;
 					while(!correctCode) {
-						//WAIT FOR REPLY OF CODE FROM CLIENT
-						String inputCode = (String) ois.readObject();
-						/*
-						 * CHECK IF CODE RECIEVED MATCHES CODE SENT VIA SMS
-						 */
+						//Wait for reply from client
+						Integer inputCode = (Integer) ois.readObject();
+						if(inputCode.intValue() == sendCode.getCode()) {
+							correctCode = true;
+						}
 						if(!correctCode) {
 							sendMsg(new LoginResponse(LoginResponse.TYPE_FAIL));
 						}
