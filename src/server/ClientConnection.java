@@ -12,6 +12,7 @@ import data.LoginCredentials;
 import data.LoginResponse;
 import data.Password;
 import data.PasswordAddRequest;
+import data.SecurityQuestion;
 import data.ServerResponse;
 
 public class ClientConnection extends Thread {
@@ -134,25 +135,37 @@ public class ClientConnection extends Thread {
 					sendMsg(new ServerResponse(success));
 					break;
 				case ClientRequest.TYPE_EDIT_PASSWORD:
-					
+					/*
+					 * TODO: ADD EDITING TO DATABASE
+					 */
 					break;
 				case ClientRequest.TYPE_REMOVE_PASSWORD:
-					
+					/*
+					 * TODO: ADD DELETION FROM DATABASE
+					 */
 					break;
 				case ClientRequest.TYPE_RETRIEVE_QUESTIONS:
-					
+					//ArrayList<SecurityQuestion> questions = DBHandler.getSecurityQuestions(passwordID);
+					//sendMsg(questions);
 					break;
 				case ClientRequest.TYPE_ADD_QUESTION:
-					
+					//boolean success = DBHandler.addQuestion(passwordID, question, answer);
+					//sendMsg(new ServerResponse(success));
 					break;
 				case ClientRequest.TYPE_EDIT_QUESTION:
-					
+					/*
+					 * TODO: ADD EDITING TO DATABASE
+					 */
 					break;
 				case ClientRequest.TYPE_REMOVE_QUESTION:
-					
+					/*
+					 * TODO: ADD DELETION FROM DATABASE
+					 */
 					break;
 				case ClientRequest.TYPE_DELETE_ACCOUNT:
-					
+					/*
+					 * TODO: ADD ACCOUNT DELETION TO DATABASE
+					 */
 					break;
 				case ClientRequest.TYPE_LOGOUT:
 					loggedOut=true;
