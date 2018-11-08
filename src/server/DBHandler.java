@@ -6,11 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import data.Password;
@@ -89,10 +87,10 @@ public class DBHandler {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("SELECT userID FROM user WHERE username=?");
+				ps=conn.prepareStatement("SELECT COUNT(*) FROM user WHERE username=?");
 				ps.setString(1, username);
 				rs=ps.executeQuery();
-				if(rs.next()) { //Check if the user exists
+				if(rs.next()) { //Check if the user exists, if so then we can't create another user with the same username
 					userID = -1;
 				} else {
 					if(rs != null) rs.close();
@@ -108,7 +106,7 @@ public class DBHandler {
 					ps.setString(4, email);
 					ps.executeUpdate();
 					rs = ps.getGeneratedKeys();
-					if(rs.next()) { //If successfully inserted return the userID
+					if(rs.next()) { //If successfully inserted then return the userID
 						userID=rs.getInt(1);
 					}
 				}
@@ -221,6 +219,48 @@ public class DBHandler {
 		return success;
 	}
 	
+	/*
+		Remove a password and the security questions for the given passwordID if the given userID is the creator
+		
+		Returns: true if successful, false otherwise
+	 */
+	public static boolean removePassword(int userID, int passwordID) {
+		boolean success = false;
+		if(conn==null) createConnection();
+		if(conn != null) {
+			PreparedStatement ps=null;
+			ResultSet rs=null;
+			try {
+				ps=conn.prepareStatement("SELECT COUNT(*) FROM password WHERE userID=? AND passwordID=?");
+				ps.setInt(1, userID);
+				ps.setInt(2, passwordID);
+				rs=ps.executeQuery();
+				if(rs.next()) { //Password belongs to the given user, delete security questions tied to the password
+					ps.close();
+					ps=conn.prepareStatement("DELETE FROM security_question WHERE passwordID=?");
+					ps.setInt(1, passwordID);
+					ps.executeUpdate();
+					ps.close();
+					ps=conn.prepareStatement("DELETE FROM password WHERE userID=? AND passwordID=?");
+					ps.setInt(1, userID);
+					ps.setInt(2, passwordID);
+					ps.executeUpdate();
+					success=true;
+				}
+			} catch(SQLException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				try {
+					if(rs != null) rs.close();
+					if(ps != null) ps.close();
+				} catch(SQLException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		}
+		return success;
+	}
+	
 	/* 
 		Add a security question for the password with the given passwordID and the given question info
  	
@@ -239,6 +279,43 @@ public class DBHandler {
 				ps.setString(3, answer);
 				ps.executeUpdate();
 				success=true;
+			} catch(SQLException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				try {
+					if(rs != null) rs.close();
+					if(ps != null) ps.close();
+				} catch(SQLException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		}
+		return success;
+	}
+	
+	/*
+		Remove a question for the given passwordID if the given userID is the creator of the password
+		
+		Returns: true if successful, false otherwise
+	 */
+	public static boolean removeQuestion(int userID, int passwordID, int questionID) {
+		boolean success = false;
+		if(conn==null) createConnection();
+		if(conn != null) {
+			PreparedStatement ps=null;
+			ResultSet rs=null;
+			try {
+				ps=conn.prepareStatement("SELECT COUNT(*) FROM password WHERE userID=? AND passwordID=?");
+				ps.setInt(1, userID);
+				ps.setInt(2, passwordID);
+				rs=ps.executeQuery();
+				if(rs.next()) { //Password belongs to the given user, this security question
+					ps.close();
+					ps=conn.prepareStatement("DELETE FROM security_question WHERE questionID=?");
+					ps.setInt(1, questionID);
+					ps.executeUpdate();
+					success=true;
+				}
 			} catch(SQLException e) {
 				System.out.println(e.getMessage());
 			} finally {

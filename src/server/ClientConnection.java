@@ -172,9 +172,8 @@ public class ClientConnection extends Thread {
 	}
 	
 	public void removePassword(PasswordRemoveRequest request) throws IOException {
-		/*
-		 * TODO: ADD DELETION FROM DATABASE
-		 */
+		boolean success = DBHandler.removePassword(userID, request.getPasswordID());
+		sendMsg(new ServerResponse(success));
 	}
 	
 	public void sendQuestionList(QuestionGetRequest request) throws IOException {
@@ -188,9 +187,8 @@ public class ClientConnection extends Thread {
 	}
 	
 	public void removeQuestion(QuestionRemoveRequest request) throws IOException {
-		/*
-		 * TODO: ADD DELETION FROM DATABASE
-		 */
+		boolean success = DBHandler.removeQuestion(userID, request.getPasswordID(), request.getQuestionID());
+		sendMsg(new ServerResponse(success));
 	}
 	
 	public void deleteAccount() throws IOException {
