@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?language javascript?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
+
+<HBox id="inBack" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: rgb(150, 0, 0);" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application2.LoginPageController">
+<GridPane alignment="CENTER" hgap="10" vgap="10">
+<padding><Insets bottom="10" left="25" right="25" top="25" /></padding>
+
+<Text id="welcome-text" text="Welcome to Trojan Password Protector" wrappingWidth="393.18084716796875" GridPane.columnIndex="1" GridPane.columnSpan="2">
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin></Text>
+ 
+    <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="User Name:" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+ 
+    <TextField fx:id="username" GridPane.columnIndex="2" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets right="30.0" />
+         </GridPane.margin></TextField>
+ 
+    <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Password:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+ 
+    <PasswordField fx:id="password" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets right="30.0" />
+         </GridPane.margin></PasswordField>
+        
+	<HBox alignment="bottom_center" prefWidth="393.0" spacing="10" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+	
+	<HBox alignment="bottom_center" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+	
+	<HBox alignment="bottom_center" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+	
+	<Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+     <Button onAction="#handleSignInAction" text="Sign In" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+     <Button onAction="#handleNewAccountAction" text="Create Account" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+     <Button onAction="#handleGuestSignInAction" text="Sign In As Guest" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+   <ImageView fitHeight="118.0" fitWidth="127.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../../image%20(2).png" />
+      </image>
+   </ImageView>      
+	       
+	       
+	<stylesheets>
+    	<URL value="@application.css" />
+  	</stylesheets>
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+         <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>         
+</GridPane>
+</HBox>
