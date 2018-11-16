@@ -93,6 +93,7 @@ public class ClientConnection extends Thread {
 				if(correctCreds) {
 					//Send response of success
 					sendMsg(new LoginResponse(LoginResponse.TYPE_SUCCESS));
+					sendMsg(email);
 					//Send email and await code verification
 					EmailSender sendCode = new EmailSender(email);
 					boolean correctCode = false;
@@ -164,10 +165,7 @@ public class ClientConnection extends Thread {
 	}
 	
 	public void addPassword(PasswordAddRequest request) throws IOException {
-		/*
-		 * TODO: FIGURE OUT WHAT TO USE FOR LAST UPDATE/SUGGEST RESET
-		 */
-		boolean success = DBHandler.addPassword(userID, request.getUsername(), request.getAppName(), request.getPassword(), "2018-11-04", "2018-11-04");
+		boolean success = DBHandler.addPassword(userID, request.getUsername(), request.getAppName(), request.getPassword());
 		sendMsg(new ServerResponse(success));
 	}
 	

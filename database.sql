@@ -11,11 +11,9 @@ CREATE TABLE user (
 CREATE TABLE password (
 	passwordID int(15) PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	userID int(10) NOT NULL,
-	username varchar(100) NOT NULL,
+	username varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 	app_name varchar(100) NOT NULL,
-	encrypted_pass varchar(250) NOT NULL,
-	last_update datetime NOT NULL,
-	suggested_reset datetime NOT NULL,
+	encrypted_pass varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 	FOREIGN KEY fk1(userID) REFERENCES user(userID)
 );
 CREATE TABLE security_question (

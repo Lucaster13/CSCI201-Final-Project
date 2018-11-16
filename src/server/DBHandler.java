@@ -134,11 +134,11 @@ public class DBHandler {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("SELECT passwordID, username, app_name, encrypted_pass, last_update, suggested_reset FROM password WHERE userID=?");
+				ps=conn.prepareStatement("SELECT passwordID, username, app_name, encrypted_pass FROM password WHERE userID=?");
 				ps.setInt(1, userID);
 				rs=ps.executeQuery();
 				while(rs.next()) {
-					results.add(new Password(rs.getInt("passwordID"), rs.getString("username"), rs.getString("app_name"), rs.getString("encrypted_pass"), rs.getString("last_update"), rs.getString("suggested_reset")));
+					results.add(new Password(rs.getInt("passwordID"), rs.getString("username"), rs.getString("app_name"), rs.getString("encrypted_pass")));
 				}
 			} catch(SQLException e) {
 				System.out.println(e.getMessage());
@@ -189,20 +189,18 @@ public class DBHandler {
 	 	
 		Returns: true if successful, false otherwise
 	 */
-	public static boolean addPassword(int userID, String username, String app_name, String encrypted_pass, String last_update, String suggested_reset) {
+	public static boolean addPassword(int userID, String username, String app_name, String encrypted_pass) {
 		boolean success = false;
 		if(conn==null) createConnection();
 		if(conn != null) {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("INSERT INTO password (userID, username, app_name, encrypted_pass, last_update, suggested_reset) VALUES (?,?,?,?,?,?)");
+				ps=conn.prepareStatement("INSERT INTO password (userID, username, app_name, encrypted_pass) VALUES (?,?,?,?)");
 				ps.setInt(1, userID);
 				ps.setString(2, username);
 				ps.setString(3, app_name);
 				ps.setString(4, encrypted_pass);
-				ps.setString(5, last_update);
-				ps.setString(6, suggested_reset);
 				ps.executeUpdate();
 				success=true;
 			} catch(SQLException e) {
