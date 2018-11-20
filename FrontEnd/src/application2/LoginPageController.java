@@ -2,6 +2,8 @@ package application2;
  
 import java.io.IOException;
 
+import client.ClientSocket;
+import data.LoginResponse;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,27 +23,39 @@ public class LoginPageController
     @FXML public void initialize() 
     {
     	password.textProperty().addListener((observable, oldValue, newValue) -> {
+    		/*
+    		 * TODO: ADD PASSWORD STRENGTH
+    		 */
     	    System.out.println("textfield changed from " + oldValue + " to " + newValue);
     	});
     }
     
     @FXML protected void handleSignInAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
-    	//System.out.println("Username: " + username.getText());
-    	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
-    	Parent root;
-		try {
-			root = FXMLLoader.load(getClass().getResource("EmailVerify.fxml"));
-			Scene scene = new Scene(root, 800, 500);
-		    
-	        primaryStage.setTitle("Verify Email");
-	        primaryStage.setScene(scene);
-	        primaryStage.show();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	if(username.getText().isEmpty() || !password.getText().isEmpty()) return;
+    	
+    	int loginSuccess = ClientSocket.login(username.getText(), password.getText());
+    	//ClientInfo c = new ClientInfo(username.getText(), false);
+    	
+    	if(loginSuccess==LoginResponse.TYPE_SUCCESS) {
+    		Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        	Parent root;
+    		try {
+    			ClientSocket.setLastPage("LoginPage");
+    			root = FXMLLoader.load(getClass().getResource("EmailVerify.fxml"));
+    			Scene scene = new Scene(root, 800, 500);
+    		    
+    	        primaryStage.setTitle("Verify Email");
+    	        primaryStage.setScene(scene);
+    	        primaryStage.show();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+    	} else if(loginSuccess==LoginResponse.TYPE_INVALID) { // TODO: DISPLAY INVALID CREDENTIALS MESSAGE
+    		
+    	} else { // TODO: DISPLAY SERVER ERROR
+    		
+    	}
     }
     
     
@@ -51,6 +65,7 @@ public class LoginPageController
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
+			ClientSocket.setLastPage("LoginPage");
 			root = FXMLLoader.load(getClass().getResource("NewAccount.fxml"));
 			Scene scene = new Scene(root, 800, 500);
 		    
@@ -58,17 +73,18 @@ public class LoginPageController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
     
     @FXML protected void handleGuestSignInAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
+    	ClientInfo c = new ClientInfo(true);
+    	
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
+			ClientSocket.setLastPage("LoginPage");
 			root = FXMLLoader.load(getClass().getResource("GuestHome.fxml"));
 			Scene scene = new Scene(root, 800, 500);
 		    
@@ -76,7 +92,6 @@ public class LoginPageController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

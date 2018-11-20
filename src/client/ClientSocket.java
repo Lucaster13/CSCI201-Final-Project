@@ -28,8 +28,9 @@ public class ClientSocket {
 	private static boolean connected = false;
 	private static String email=null;
 	private static boolean loggedIn=false;
+	private static String lastPage="";
 	
-	public static boolean createConnection() {
+	private static boolean createConnection() {
 		try {
 			s = new Socket(hostname, port);
 			oos = new ObjectOutputStream(s.getOutputStream());
@@ -88,7 +89,6 @@ public class ClientSocket {
 		if(connected) {
 			/*
 			 * TODO: Hash password
-			 * 		 Validate email here or where this function is called
 			 */
 			try {
 				//Send info to server
@@ -224,5 +224,13 @@ public class ClientSocket {
 	
 	public static boolean activeSocket() {
 		return connected;
+	}
+	
+	public static void setLastPage(String lastPage) {
+		ClientSocket.lastPage=lastPage;
+	}
+	
+	public static String getLastPage() {
+		return lastPage;
 	}
 }

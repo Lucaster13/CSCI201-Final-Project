@@ -1,5 +1,5 @@
 package application2;
- 
+
 import java.io.IOException;
 
 import javafx.event.ActionEvent;
@@ -11,24 +11,39 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
- 
-public class FXMLExampleController 
+
+public class ManageAccountController 
 {
-    @FXML private Text actiontarget;
-    @FXML private TextField username;
-    @FXML private TextField password;
-    
-    @FXML protected void handleSignInAction(ActionEvent event) 
+	@FXML private Text actiontarget;
+	@FXML private TextField newEmail;
+	
+	@FXML protected void handleBackAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
-    	//System.out.println("Username: " + username.getText());
+    	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+    	Parent root;
+		try {
+			root = FXMLLoader.load(getClass().getResource("UserHome.fxml"));
+			Scene scene = new Scene(root, 800, 500);
+		    
+	        primaryStage.setTitle("User Home");
+	        primaryStage.setScene(scene);
+	        primaryStage.show();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+	
+	@FXML protected void handleChangeAction(ActionEvent event) 
+    {
+		ClientInfo.verifyInManage();
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
 			root = FXMLLoader.load(getClass().getResource("EmailVerify.fxml"));
-			Scene scene = new Scene(root, 1000, 600);
+			Scene scene = new Scene(root, 800, 500);
 		    
-	        primaryStage.setTitle("Verify Email");
+	        primaryStage.setTitle("Email Verify");
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
@@ -36,36 +51,16 @@ public class FXMLExampleController
 			e.printStackTrace();
 		}
     }
-    
-    
-    @FXML protected void handleNewAccountAction(ActionEvent event) 
+	
+	@FXML protected void handleDeleteAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
-			root = FXMLLoader.load(getClass().getResource("NewAccount.fxml"));
-			Scene scene = new Scene(root, 1000, 600);
+			root = FXMLLoader.load(getClass().getResource("DeleteAccount.fxml"));
+			Scene scene = new Scene(root, 800, 500);
 		    
-	        primaryStage.setTitle("Create New Account");
-	        primaryStage.setScene(scene);
-	        primaryStage.show();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-    
-    @FXML protected void handleGuestSignInAction(ActionEvent event) 
-    {
-        //actiontarget.setText("Sign in button pressed");
-    	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
-    	Parent root;
-		try {
-			root = FXMLLoader.load(getClass().getResource("GuestHome.fxml"));
-			Scene scene = new Scene(root, 1000, 600);
-		    
-	        primaryStage.setTitle("Guest Home");
+	        primaryStage.setTitle("Delete Account");
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {

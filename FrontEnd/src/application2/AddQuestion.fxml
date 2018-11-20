@@ -1,8 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?language javascript?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1">
-	<!-- TODO Add Nodes -->
-</AnchorPane>
+<HBox id="inBack" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: rgb(150, 0, 0);" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application2.AddQuestionController">
+<GridPane alignment="center" hgap="10" vgap="10">
+<padding><Insets bottom="10" left="25" right="25" top="25" /></padding>
 
+<Text id="welcome-text" text="Add Security Question" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+ 
+    <Label text="Question:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+ 
+    <Label text="Answer:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+ 
+    <TextField fx:id="email" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+	
+	<Text fx:id="actiontarget" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+     <Button onAction="#handleBackAction" text="Back" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
+      <TextArea prefHeight="85.0" prefWidth="309.0" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <Button mnemonicParsing="false" onAction="#handleAddAction" text="Add" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+      <ImageView fitHeight="150.0" fitWidth="142.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../image%20(2).png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="150.0" fitWidth="142.0" opacity="0.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+         <image>
+            <Image url="@../../image%20(2).png" />
+         </image>
+      </ImageView>      
+	       
+	       
+	<stylesheets>
+    	<URL value="@application.css" />
+  	</stylesheets>
+      <columnConstraints>
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>         
+</GridPane>
+</HBox>

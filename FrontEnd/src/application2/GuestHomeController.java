@@ -2,6 +2,8 @@ package application2;
  
 import java.io.IOException;
 
+import application2.UserHomeController.Password;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,10 +22,40 @@ public class GuestHomeController
 {
     @FXML private Text actiontarget;
     
-    @FXML
-    public void initialize() 
+    @FXML private TableView<Password> passwordTable;
+    @FXML private TableColumn accountName;
+    @FXML private TableColumn password;
+    
+    
+    //Make password hyperlink by changing Password class itself
+    //Password class is in UserHomeController
+    private final ObservableList<Password> data =
+        FXCollections.observableArrayList(
+            new Password("Hello", "Z"),
+            new Password("Sup", "X"),
+            new Password("Hi", "W"),
+            new Password("Bye", "Y"),
+            new Password("See you", "V")
+        );
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@FXML public void initialize() 
     {
+    	passwordTable.setEditable(true);
         
+    	accountName = new TableColumn("Account Name");
+        accountName.setCellValueFactory(
+            new PropertyValueFactory<Password,String>("accountName")
+        );
+
+        password = new TableColumn("Password");
+        password.setCellValueFactory(
+            new PropertyValueFactory<Password,String>("password")
+        );
+                           
+        passwordTable.setItems(data);
+        passwordTable.getColumns().addAll(accountName, password);
+        System.out.println("done");
     }
     
     @FXML protected void handleNewPasswordAction(ActionEvent event) 
@@ -79,23 +111,5 @@ public class GuestHomeController
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
-    
-    public static class Account {
-        private final String title;
-        private final String password;
-
-        private Account(String title, String password) {
-            this.title = title;
-            this.password = password;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-       
-        public String getLastName() {
-            return password;
-        }
     }
 }

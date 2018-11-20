@@ -33,20 +33,41 @@ public class DeletePasswordController
     
     @FXML protected void handleDeleteAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
-    	//System.out.println("Username: " + username.getText());
-    	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
-    	Parent root;
-		try {
-			root = FXMLLoader.load(getClass().getResource("DeletePassword.fxml"));
-			Scene scene = new Scene(root, 800, 500);
-		    
-	        primaryStage.setTitle("Delete Password");
-	        primaryStage.setScene(scene);
-	        primaryStage.show();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	if(ClientInfo.getGuestStatus() == true)
+    	{
+    		//actiontarget.setText("Sign in button pressed");
+        	//System.out.println("Username: " + username.getText());
+        	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        	Parent root;
+    		try {
+    			root = FXMLLoader.load(getClass().getResource("GuestHome.fxml"));
+    			Scene scene = new Scene(root, 800, 500);
+    		    
+    	        primaryStage.setTitle("Guest Home");
+    	        primaryStage.setScene(scene);
+    	        primaryStage.show();
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    	}
+    	else 
+    	{
+	        //actiontarget.setText("Sign in button pressed");
+	    	//System.out.println("Username: " + username.getText());
+	    	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+	    	Parent root;
+			try {
+				root = FXMLLoader.load(getClass().getResource("UserHome.fxml"));
+				Scene scene = new Scene(root, 800, 500);
+			    
+		        primaryStage.setTitle("User Home");
+		        primaryStage.setScene(scene);
+		        primaryStage.show();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
     }
 }

@@ -8,27 +8,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class AddQuestionController 
+public class DeleteAccountController 
 {
-	@FXML private Text actiontarget;
-    @FXML private TextField username;
-    @FXML private TextField password;
-    @FXML private TextField confirmPassword;
-    @FXML private TextField email;
-	
 	@FXML protected void handleBackAction(ActionEvent event) 
     {
+        //actiontarget.setText("Sign in button pressed");
+    	//System.out.println("Username: " + username.getText());
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
-			root = FXMLLoader.load(getClass().getResource("NewPassword.fxml"));
+			root = FXMLLoader.load(getClass().getResource("ManageAccount.fxml"));
 			Scene scene = new Scene(root, 800, 500);
 		    
-	        primaryStage.setTitle("New Password");
+	        primaryStage.setTitle("Manage Account");
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
@@ -36,16 +30,18 @@ public class AddQuestionController
 			e.printStackTrace();
 		}
     }
-	
-	@FXML protected void handleAddAction(ActionEvent event) 
+    
+    @FXML protected void handleDeleteAction(ActionEvent event) 
     {
+        //actiontarget.setText("Sign in button pressed");
+    	//System.out.println("Username: " + username.getText());
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
-			root = FXMLLoader.load(getClass().getResource("NewPassword.fxml"));
+			root = FXMLLoader.load(getClass().getResource("LoginPage.fxml"));
 			Scene scene = new Scene(root, 800, 500);
 		    
-	        primaryStage.setTitle("New Password");
+	        primaryStage.setTitle("Login Page");
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
