@@ -4,7 +4,7 @@ USE password_protector;
 CREATE TABLE user (
 	userID int(10) PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	username varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL UNIQUE,
-	master_pass varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+	master_pass varchar(350) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 	last_update datetime NOT NULL,
 	email varchar(100) NOT NULL UNIQUE
 );
@@ -13,7 +13,7 @@ CREATE TABLE password (
 	userID int(10) NOT NULL,
 	username varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 	app_name varchar(100) NOT NULL,
-	encrypted_pass varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+	encrypted_pass varchar(350) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 	FOREIGN KEY fk1(userID) REFERENCES user(userID)
 );
 CREATE TABLE security_question (

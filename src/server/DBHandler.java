@@ -87,7 +87,7 @@ public class DBHandler {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("SELECT COUNT(*) FROM user WHERE username=?");
+				ps=conn.prepareStatement("SELECT * FROM user WHERE username=?");
 				ps.setString(1, username);
 				rs=ps.executeQuery();
 				if(rs.next()) { //Check if the user exists, if so then we can't create another user with the same username
@@ -134,7 +134,7 @@ public class DBHandler {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("SELECT passwordID, username, app_name, encrypted_pass FROM password WHERE userID=?");
+				ps=conn.prepareStatement("SELECT passwordID, username, app_name, encrypted_pass FROM password WHERE userID=? ORDER BY app_name");
 				ps.setInt(1, userID);
 				rs=ps.executeQuery();
 				while(rs.next()) {

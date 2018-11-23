@@ -96,7 +96,7 @@ public class ClientSocket {
 				LoginResponse response = (LoginResponse) ois.readObject();
 				result = response.getType();
 				if(result == LoginResponse.TYPE_SUCCESS) {
-					email = (String) ois.readObject();
+					ClientSocket.email = (String) ois.readObject();
 				}
 			} catch(IOException|ClassNotFoundException e) { }
 		}
@@ -112,6 +112,7 @@ public class ClientSocket {
 		int result = LoginResponse.TYPE_FAIL;
 		try {
 			//Send info to server
+			System.out.println("Verify: "+input.intValue());
 			sendMsg(input);
 			LoginResponse response = (LoginResponse) ois.readObject();
 			result = response.getType();

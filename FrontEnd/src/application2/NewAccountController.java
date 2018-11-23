@@ -49,20 +49,35 @@ public class NewAccountController
     
 	@FXML protected void handleBackAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
-    	//System.out.println("Username: " + username.getText());
-    	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
-    	Parent root;
-		try {
-			root = FXMLLoader.load(getClass().getResource("LoginPage.fxml"));
-			Scene scene = new Scene(root, 800, 500);
-		    
-	        primaryStage.setTitle("Login Page");
-	        primaryStage.setScene(scene);
-	        primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        if(ClientSocket.getLastPage().equals("GuestHome")) {
+        	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        	Parent root;
+    		try {
+    			root = FXMLLoader.load(getClass().getResource("GuestHome.fxml"));
+    			Scene scene = new Scene(root, 800, 500);
+    		    
+    	        primaryStage.setTitle("Guest Home");
+    	        primaryStage.setScene(scene);
+    	        primaryStage.show();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        } else {
+        	//actiontarget.setText("Sign in button pressed");
+        	//System.out.println("Username: " + username.getText());
+        	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        	Parent root;
+    		try {
+    			root = FXMLLoader.load(getClass().getResource("LoginPage.fxml"));
+    			Scene scene = new Scene(root, 800, 500);
+    		    
+    	        primaryStage.setTitle("Login Page");
+    	        primaryStage.setScene(scene);
+    	        primaryStage.show();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }
     }
 	
 	@FXML protected void handleRegisterAction(ActionEvent event) 
@@ -81,6 +96,7 @@ public class NewAccountController
 		} else { //Valid inputs have been used
 			int loginSuccess = ClientSocket.createUser(username.getText(), password.getText(), email.getText());
 			if(loginSuccess == LoginResponse.TYPE_SUCCESS) { // Successful login
+				System.out.println("Valid login creation");
 				Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
 		    	Parent root;
 				try {
@@ -95,9 +111,9 @@ public class NewAccountController
 					e.printStackTrace();
 				}
 			} else if(loginSuccess == LoginResponse.TYPE_INVALID) { // TODO: DISPLAY MESSAGE USERNAME EXISTS
-				
+				System.out.println("Invalid login creation");
 			} else { // TODO: DISPLAY MESSAGE SERVER ERROR
-				
+				System.out.println("Server error");
 			}
 		}
     }

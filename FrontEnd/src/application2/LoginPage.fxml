@@ -50,12 +50,12 @@
      <Button onAction="#handleGuestSignInAction" text="Sign In As Guest" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
    <ImageView fitHeight="140.0" fitWidth="148.0" pickOnBounds="true" preserveRatio="true">
       <image>
-         <Image url="@../../image%20(2).png" />
+         <Image url="@trojan.png" />
       </image>
    </ImageView>
       <ImageView fitHeight="140.0" fitWidth="148.0" opacity="0.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
          <image>
-            <Image url="@../../image%20(2).png" />
+            <Image url="@trojan.png" />
          </image>
       </ImageView>      
 	       

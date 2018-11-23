@@ -22,22 +22,18 @@ public class LoginPageController
     
     @FXML public void initialize() 
     {
-    	password.textProperty().addListener((observable, oldValue, newValue) -> {
-    		/*
-    		 * TODO: ADD PASSWORD STRENGTH
-    		 */
-    	    System.out.println("textfield changed from " + oldValue + " to " + newValue);
-    	});
+    	
     }
     
     @FXML protected void handleSignInAction(ActionEvent event) 
     {
-    	if(username.getText().isEmpty() || !password.getText().isEmpty()) return;
+    	if(username.getText().isEmpty() || password.getText().isEmpty()) return;
     	
     	int loginSuccess = ClientSocket.login(username.getText(), password.getText());
     	//ClientInfo c = new ClientInfo(username.getText(), false);
     	
     	if(loginSuccess==LoginResponse.TYPE_SUCCESS) {
+    		System.out.println("Successful login");
     		Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
         	Parent root;
     		try {
@@ -52,9 +48,9 @@ public class LoginPageController
     			e.printStackTrace();
     		}
     	} else if(loginSuccess==LoginResponse.TYPE_INVALID) { // TODO: DISPLAY INVALID CREDENTIALS MESSAGE
-    		
+    		System.out.println("Invalid login");
     	} else { // TODO: DISPLAY SERVER ERROR
-    		
+    		System.out.println("Server error");
     	}
     }
     

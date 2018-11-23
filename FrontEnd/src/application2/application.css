@@ -60,13 +60,14 @@
 
 .table-view{
    -fx-background-color: transparent;
+   -fx-font-size: 14px;
 }
 
 .table-view:focused{
     -fx-background-color: transparent;
 }
 
-.table-view .column-header-background{
+.table-view .column-header-background, .table-view .column-header-background .filler {
     -fx-background-color: linear-gradient(rgb(255, 225, 0), rgb(255, 170, 0));
 }
 
@@ -102,4 +103,35 @@
     -fx-background-color: #005797;
     -fx-background-insets: 0;
     -fx-background-radius: 1;
+}
+
+.table-view:row-selection:constrained-resize .virtual-flow .scroll-bar:vertical {
+	-fx-background-color: #616161;
+}
+
+.table-view:row-selection:constrained-resize .virtual-flow .scroll-bar:vertical .thumb {
+	-fx-background-color: #424242;
+	-fx-background-insets: 3px;
+	-fx-background-radius: 25px;
+}
+
+.table-view:row-selection:constrained-resize .virtual-flow .scroll-bar:vertical .increment-button .increment-arrow,
+	.table-view:row-selection:constrained-resize .virtual-flow .scroll-bar:vertical .decrement-button .decrement-arrow {
+	-fx-background-color: #373737;
+	-fx-effect: none;
+}
+
+.table-view:row-selection:constrained-resize .virtual-flow .scroll-bar:vertical .increment-button:hover,
+	.table-view:row-selection:constrained-resize .virtual-flow .scroll-bar:vertical .decrement-button:hover {
+	-fx-background-color: transparent;
+}
+
+.hyperlink, .hyperlink:visited {
+	-fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-underline: false;
+}
+
+.hyperlink:hover {
+    -fx-underline: true;
 }

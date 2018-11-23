@@ -25,12 +25,9 @@
 	
 	<Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="6" />      
 	  
-	<HBox alignment="bottom_center" spacing="10" GridPane.rowIndex="4">
+	<HBox alignment="bottom_center" spacing="10" GridPane.rowIndex="5">
         <Button onAction="#handleVerifyAction" text="Verify" />
-	</HBox>     
-	
-	<HBox alignment="bottom_center" spacing="10" GridPane.rowIndex="8" />
-     <Button onAction="#handleBackAction" text="Back" GridPane.halignment="CENTER" GridPane.rowIndex="5" />    
+	</HBox>
 	       
 	<stylesheets>
     	<URL value="@application.css" />

@@ -70,9 +70,11 @@ public class ClientConnection extends Thread {
 					userID = DBHandler.createUser(username, hashPass, info.getEmail());
 					if(userID == -1) { //Username already exists
 						//Send response that username is in use
+						System.out.println("User Exists");
 						sendMsg(new LoginResponse(LoginResponse.TYPE_INVALID));
 					} else if(userID == 0) {
 						//Send response that creation failed
+						System.out.println("Fail creation");
 						sendMsg(new LoginResponse(LoginResponse.TYPE_FAIL));
 					} else {
 						email = info.getEmail();
@@ -83,6 +85,7 @@ public class ClientConnection extends Thread {
 					DBUserInfo info = DBHandler.verifyUser(username, hashPass);
 					if(info == null) {
 						//Send response invalid credentials
+						System.out.println("Invalid creds");
 						sendMsg(new LoginResponse(LoginResponse.TYPE_INVALID));
 					} else {
 						userID = info.getUserID();
@@ -92,6 +95,7 @@ public class ClientConnection extends Thread {
 				}
 				if(correctCreds) {
 					//Send response of success
+					System.out.println("Successful login");
 					sendMsg(new LoginResponse(LoginResponse.TYPE_SUCCESS));
 					sendMsg(email);
 					//Send email and await code verification

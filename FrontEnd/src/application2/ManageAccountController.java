@@ -2,6 +2,7 @@ package application2;
 
 import java.io.IOException;
 
+import client.ClientSocket;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,6 +41,7 @@ public class ManageAccountController
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
+			ClientSocket.setLastPage("ManageAccount");
 			root = FXMLLoader.load(getClass().getResource("EmailVerify.fxml"));
 			Scene scene = new Scene(root, 800, 500);
 		    

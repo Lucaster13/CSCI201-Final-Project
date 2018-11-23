@@ -2,6 +2,7 @@ package application2;
  
 import java.io.IOException;
 
+import application2.UserHomeController.Password;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +18,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
  
@@ -25,8 +28,8 @@ public class UserHomeController
     @FXML private Text actiontarget;
     @FXML private TextField username;
     @FXML private TableView<Password> passwordTable;
-    @FXML private TableColumn accountName;
-    @FXML private TableColumn password;
+    @FXML private TableColumn<Password,String> accountName;
+    @FXML private TableColumn<Password,String> password;
     
     //Make password hyperlink by changing Password class itself
     private final ObservableList<Password> data =
@@ -42,20 +45,14 @@ public class UserHomeController
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	@FXML public void initialize() 
     {
-    	passwordTable.setEditable(true);
-        
-    	accountName = new TableColumn("Account Name");
-        accountName.setCellValueFactory(
+    	accountName.setCellValueFactory(
             new PropertyValueFactory<Password,String>("accountName")
         );
-
-        password = new TableColumn("Password");
         password.setCellValueFactory(
-            new PropertyValueFactory<Password,String>("password")
+            new PropertyValueFactory<Password,String>("displayPassword")
         );
-                           
+        
         passwordTable.setItems(data);
-        passwordTable.getColumns().addAll(accountName, password);
         System.out.println("done");
     }
     
@@ -132,28 +129,29 @@ public class UserHomeController
     
     public static class Password {
         private final SimpleStringProperty accountName;
-        private final Hyperlink password;
+        private Hyperlink displayPassword=new Hyperlink("•••••••");
+        private boolean hidden=true;
+        private final String password;
 
         Password(String accountName, String password) {
             this.accountName = new SimpleStringProperty(accountName);
-            this.password = new Hyperlink(password);
-            this.password.setOnAction(new EventHandler<ActionEvent>() {
+            this.password = password;
+            this.displayPassword.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
-                public void handle(ActionEvent event) 
+                public void handle(MouseEvent event) 
                 {
-                	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
-                	Parent root;
-            		try {
-            			root = FXMLLoader.load(getClass().getResource("PasswordDetails.fxml"));
-            			Scene scene = new Scene(root, 800, 500);
-            		    
-            	        primaryStage.setTitle("Password Details");
-            	        primaryStage.setScene(scene);
-            	        primaryStage.show();
-            		} catch (IOException e) {
-            			// TODO Auto-generated catch block
-            			e.printStackTrace();
-            		}
+                	 if(event.getButton().equals(MouseButton.PRIMARY)){
+                         if(event.getClickCount() == 1){
+                        	 if(hidden) {
+                        		 displayPassword.setText(password);
+                        		 hidden=false;
+                        	 } else {
+                        		 displayPassword.setText("•••••••");
+                        		 hidden=true;
+                        	 }
+                         }
+                     }
+                	event.consume();
                 }
             });
         }
@@ -162,9 +160,12 @@ public class UserHomeController
             return accountName.get();
         }
         
-        public Hyperlink getPassword() {
+        public String getPassword() {
             return password;
         }
-              
+        
+        public Hyperlink getDisplayPassword() {
+        	return displayPassword;
+        }              
     }
 }
