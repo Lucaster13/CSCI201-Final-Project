@@ -189,20 +189,23 @@ public class DBHandler {
 	 	
 		Returns: true if successful, false otherwise
 	 */
-	public static boolean addPassword(int userID, String username, String app_name, String encrypted_pass) {
-		boolean success = false;
+	public static int addPassword(int userID, String username, String app_name, String encrypted_pass) {
+		int success = 0;
 		if(conn==null) createConnection();
 		if(conn != null) {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("INSERT INTO password (userID, username, app_name, encrypted_pass) VALUES (?,?,?,?)");
+				ps=conn.prepareStatement("INSERT INTO password (userID, username, app_name, encrypted_pass) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 				ps.setInt(1, userID);
 				ps.setString(2, username);
 				ps.setString(3, app_name);
 				ps.setString(4, encrypted_pass);
 				ps.executeUpdate();
-				success=true;
+				rs = ps.getGeneratedKeys();
+				if(rs.next()) { //If successfully inserted then return the passwordID
+					success=rs.getInt(1);
+				}
 			} catch(SQLException e) {
 				System.out.println(e.getMessage());
 			} finally {
@@ -319,6 +322,42 @@ public class DBHandler {
 			} finally {
 				try {
 					if(rs != null) rs.close();
+					if(ps != null) ps.close();
+				} catch(SQLException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		}
+		return success;
+	}
+	
+	public static boolean deleteAccount(int userID) {
+		boolean success = false;
+		if(conn==null) createConnection();
+		if(conn != null) {
+			PreparedStatement ps=null;
+			try {
+				/*
+				DELETE SQ FROM security_question SQ INNER JOIN password PW USING(passwordID) WHERE userID=1;
+				DELETE PW FROM password PW WHERE userID=1;
+				DELETE U FROM user U WHERE userID=1;
+				 */
+				ps=conn.prepareStatement("DELETE SQ FROM security_question SQ INNER JOIN password PW USING(passwordID) WHERE userID=?");
+				ps.setInt(1, userID);
+				ps.executeUpdate();
+				ps.close();
+				ps=conn.prepareStatement("DELETE PW FROM password PW WHERE userID=?");
+				ps.setInt(1, userID);
+				ps.executeUpdate();
+				ps.close();
+				ps=conn.prepareStatement("DELETE U FROM user U WHERE userID=?");
+				ps.setInt(1, userID);
+				ps.executeUpdate();
+				success=true;
+			} catch(SQLException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				try {
 					if(ps != null) ps.close();
 				} catch(SQLException e) {
 					System.out.println(e.getMessage());

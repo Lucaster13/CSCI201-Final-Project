@@ -10,7 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -48,8 +47,8 @@ public class EmailVerifyController
     	String inputCode = code.getText();
     	String regex = "\\d{6}";
     	if(inputCode.matches(regex)) { //Valid 6 digit number
-    		int validCode = ClientSocket.verifyCode(Integer.valueOf(inputCode));
-    		if(validCode == LoginResponse.TYPE_SUCCESS) {
+    		boolean validCode = ClientSocket.verifyCode(Integer.valueOf(inputCode));
+    		if(validCode) {
     			Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
             	Parent root;
         		try {

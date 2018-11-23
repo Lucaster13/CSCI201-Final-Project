@@ -135,3 +135,18 @@
 .hyperlink:hover {
     -fx-underline: true;
 }
+
+.noheader .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}
+
+.noheader .table-row-cell:empty {
+    -fx-background-color: transparent;
+}
+ 
+.noheader .table-row-cell:empty .table-cell {
+    -fx-border-width: 0px;
+}
+

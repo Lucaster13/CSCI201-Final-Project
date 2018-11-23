@@ -75,8 +75,6 @@ public class LoginPageController
     
     @FXML protected void handleGuestSignInAction(ActionEvent event) 
     {
-    	ClientInfo c = new ClientInfo(true);
-    	
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {

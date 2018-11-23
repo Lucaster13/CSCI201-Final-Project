@@ -2,6 +2,9 @@ package application2;
 
 import java.io.IOException;
 
+import application2.UserHomeController.DisplayPassword;
+import client.ClientSocket;
+import client.GuestInfo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,8 +17,6 @@ public class DeletePasswordController
 {
 	@FXML protected void handleBackAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
-    	//System.out.println("Username: " + username.getText());
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
@@ -26,17 +27,16 @@ public class DeletePasswordController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
     
     @FXML protected void handleDeleteAction(ActionEvent event) 
     {
-    	if(ClientInfo.getGuestStatus() == true)
+    	DisplayPassword passwordPicked = ClientSocket.getViewPassword();
+    	if(ClientSocket.isGuest())
     	{
-    		//actiontarget.setText("Sign in button pressed");
-        	//System.out.println("Username: " + username.getText());
+    		GuestInfo.removePassword(passwordPicked.getPassID());
         	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
         	Parent root;
     		try {
@@ -47,14 +47,12 @@ public class DeletePasswordController
     	        primaryStage.setScene(scene);
     	        primaryStage.show();
     		} catch (IOException e) {
-    			// TODO Auto-generated catch block
     			e.printStackTrace();
     		}
     	}
     	else 
     	{
-	        //actiontarget.setText("Sign in button pressed");
-	    	//System.out.println("Username: " + username.getText());
+    		ClientSocket.removePassword(passwordPicked.getPassID());
 	    	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
 	    	Parent root;
 			try {
@@ -65,7 +63,6 @@ public class DeletePasswordController
 		        primaryStage.setScene(scene);
 		        primaryStage.show();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	}

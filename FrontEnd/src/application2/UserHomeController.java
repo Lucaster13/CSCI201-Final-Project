@@ -1,8 +1,11 @@
 package application2;
  
 import java.io.IOException;
+import java.util.ArrayList;
 
-import application2.UserHomeController.Password;
+import application2.UserHomeController.DisplayPassword;
+import client.ClientSocket;
+import data.Password;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -25,35 +29,51 @@ import javafx.stage.Stage;
  
 public class UserHomeController 
 {
-    @FXML private Text actiontarget;
     @FXML private TextField username;
-    @FXML private TableView<Password> passwordTable;
-    @FXML private TableColumn<Password,String> accountName;
-    @FXML private TableColumn<Password,String> password;
+    @FXML private TableView<DisplayPassword> passwordTable;
+    @FXML private TableColumn<DisplayPassword,String> accountName;
+    @FXML private TableColumn<DisplayPassword,String> password;
     
-    //Make password hyperlink by changing Password class itself
-    private final ObservableList<Password> data =
-        FXCollections.observableArrayList(
-            new Password("Hello", "Z"),
-            new Password("Sup", "X"),
-            new Password("Hi", "W"),
-            new Password("Bye", "Y"),
-            new Password("See you", "V"),
-            new Password("Bye", "Y")
-        );
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
 	@FXML public void initialize() 
     {
+		ObservableList<DisplayPassword> data =
+		        FXCollections.observableArrayList();
+		ArrayList<Password> dbPasswords = ClientSocket.getPasswords();
+		for(Password pass : dbPasswords) {
+			data.add(new DisplayPassword(pass.getID(), pass.getName(), pass.getUsername(), pass.getPass()));
+		}
+		
     	accountName.setCellValueFactory(
-            new PropertyValueFactory<Password,String>("accountName")
+            new PropertyValueFactory<DisplayPassword,String>("accountName")
         );
         password.setCellValueFactory(
-            new PropertyValueFactory<Password,String>("displayPassword")
+            new PropertyValueFactory<DisplayPassword,String>("displayPassword")
         );
-        
+        passwordTable.setRowFactory(tv -> {
+        	TableRow<DisplayPassword> row = new TableRow<>();
+        	row.setOnMouseClicked(event -> {
+        		if (!row.isEmpty() && event.getButton().equals(MouseButton.PRIMARY) 
+        	             && event.getClickCount() == 2) {
+        			DisplayPassword clickedRow = row.getItem();
+    	            System.out.println("Clicked on: "+clickedRow.getAccountName());
+    	            Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                	Parent root;
+            		try {
+            			ClientSocket.setViewPassword(clickedRow);
+            			ClientSocket.setLastPage("GuestHome");
+            			root = FXMLLoader.load(getClass().getResource("PasswordDetails.fxml"));
+            			Scene scene = new Scene(root, 800, 500);
+            	        primaryStage.setTitle("Password Details");
+            	        primaryStage.setScene(scene);
+            	        primaryStage.show();
+            		} catch (IOException e) {
+            			e.printStackTrace();
+            		}
+    	        }
+        	});
+        	return row;
+        });
         passwordTable.setItems(data);
-        System.out.println("done");
     }
     
     @FXML protected void handleNewPasswordAction(ActionEvent event) 
@@ -62,6 +82,7 @@ public class UserHomeController
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
+			ClientSocket.setLastPage("UserHome");
 			root = FXMLLoader.load(getClass().getResource("NewPassword.fxml"));
 			Scene scene = new Scene(root, 800, 500);
 		    
@@ -69,7 +90,6 @@ public class UserHomeController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -87,14 +107,13 @@ public class UserHomeController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
     
     @FXML protected void handleEndSessionAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
+    	ClientSocket.logout();
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
@@ -105,7 +124,6 @@ public class UserHomeController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -122,19 +140,22 @@ public class UserHomeController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
     
-    public static class Password {
+    public static class DisplayPassword {
+    	private int passID;
+    	private String username;
         private final SimpleStringProperty accountName;
         private Hyperlink displayPassword=new Hyperlink("•••••••");
         private boolean hidden=true;
         private final String password;
 
-        Password(String accountName, String password) {
-            this.accountName = new SimpleStringProperty(accountName);
+        public DisplayPassword(int passID, String accountName, String username, String password) {
+            this.passID=passID;
+            this.username=username;
+        	this.accountName = new SimpleStringProperty(accountName);
             this.password = password;
             this.displayPassword.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
@@ -160,12 +181,20 @@ public class UserHomeController
             return accountName.get();
         }
         
+        public String getUsername() {
+        	return username;
+        }
+        
         public String getPassword() {
             return password;
         }
         
         public Hyperlink getDisplayPassword() {
         	return displayPassword;
-        }              
+        }
+        
+        public int getPassID() {
+        	return passID;
+        }
     }
 }

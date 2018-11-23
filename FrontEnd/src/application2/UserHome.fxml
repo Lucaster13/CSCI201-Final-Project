@@ -27,7 +27,6 @@
       <FlowPane prefHeight="500.0" prefWidth="612.0">
          <children>
             <HBox prefHeight="41.0" prefWidth="617.0" />
-            <Text fx:id="actiontarget" />
             <HBox prefHeight="100.0" prefWidth="619.0">
                <children>
                   <GridPane prefHeight="76.0" prefWidth="619.0">
@@ -53,14 +52,17 @@
                   <Label text="Current Passwords:" />
                </children>
             </HBox>
-            <TableView fx:id="passwordTable1" prefHeight="276.0" prefWidth="627.0">
+            <TableView fx:id="passwordTable" prefHeight="276.0" prefWidth="627.0">
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
                <columns>
-                  <TableColumn fx:id="accountName" editable="false" prefWidth="100.0" text="Account Name" />
+                  <TableColumn fx:id="accountName" editable="false" prefWidth="100.0" text="Application Name" />
                   <TableColumn fx:id="password" editable="false" prefWidth="100.0" sortable="false" text="Password" />
                </columns>
+               <placeholder>
+            	<Label text="No passwords to display."/>
+        	</placeholder>
             </TableView>
          </children>
       </FlowPane>

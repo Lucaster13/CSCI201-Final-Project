@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import application2.UserHomeController.DisplayPassword;
 import data.ClientRequest;
 import data.LoginCreation;
 import data.LoginCredentials;
@@ -29,6 +30,7 @@ public class ClientSocket {
 	private static String email=null;
 	private static boolean loggedIn=false;
 	private static String lastPage="";
+	private static DisplayPassword viewPassword=null;
 	
 	private static boolean createConnection() {
 		try {
@@ -71,6 +73,7 @@ public class ClientSocket {
 				result = response.getType();
 				if(result == LoginResponse.TYPE_SUCCESS) {
 					email = (String) ois.readObject();
+					loggedIn=true;
 				}
 			} catch(IOException|ClassNotFoundException e) { }
 		}
@@ -105,18 +108,26 @@ public class ClientSocket {
 	
 	/*
 	 * Verifies the code sent to the user's email
-	 * Returns: LoginResponse.TYPE_FAIL if the code is incorrect
-	 * 			LoginResponse.TYPE_SUCCESS if the code is correct
+	 * Returns: false if the code is incorrect
+	 * 			true if the code is correct
 	 */
-	public static int verifyCode(Integer input) {
-		int result = LoginResponse.TYPE_FAIL;
+	public static boolean verifyCode(Integer input) {
+		boolean result = false;
 		try {
 			//Send info to server
 			System.out.println("Verify: "+input.intValue());
 			sendMsg(input);
 			LoginResponse response = (LoginResponse) ois.readObject();
-			result = response.getType();
-			loggedIn=true;
+			if(response.getType()==LoginResponse.TYPE_SUCCESS) {
+				result = true;
+				if(isGuest()) { //Was a guest
+					ArrayList<DisplayPassword> guestPass = GuestInfo.getPasswords();
+					for(DisplayPassword pass : guestPass) {
+						addPassword(pass.getUsername(), pass.getAccountName(), pass.getPassword());
+					}
+					loggedIn=true;
+				}
+			}
 		} catch(IOException|ClassNotFoundException e) { }
 		return result;
 	}
@@ -125,6 +136,7 @@ public class ClientSocket {
 	 * Returns: null if error obtaining data
 	 * 			ArrayList of the Passwords from database if successful
 	 */
+	@SuppressWarnings("unchecked")
 	public static ArrayList<Password> getPasswords() {
 		ArrayList<Password> result = null;
 		try {
@@ -135,15 +147,15 @@ public class ClientSocket {
 	}
 	
 	/*
-	 * Returns: false if unsuccessful
-	 * 			true if successfully added to database
+	 * Returns: 0 if unsuccessful
+	 * 			passwordID if successfully added to database
 	 */
-	public static boolean addPassword(String username, String app_name, String password) {
-		boolean result = false;
+	public static int addPassword(String app_name, String username, String password) {
+		int result = 0;
 		try {
 			sendMsg(new PasswordAddRequest(username, app_name, password));
 			ServerResponse response = (ServerResponse) ois.readObject();
-			result = response.getSuccess();
+			result = response.getStatus();
 		} catch(IOException|ClassNotFoundException e) { }
 		return result;
 	}
@@ -157,7 +169,7 @@ public class ClientSocket {
 		try {
 			sendMsg(new PasswordRemoveRequest(passwordID));
 			ServerResponse response = (ServerResponse) ois.readObject();
-			result = response.getSuccess();
+			result = (response.getStatus()!=0);
 		} catch(IOException|ClassNotFoundException e) { }
 		return result;
 	}
@@ -166,6 +178,7 @@ public class ClientSocket {
 	 * Returns: null if error obtaining data
 	 * 			ArrayList of the SecurityQuestions from database if successful
 	 */
+	@SuppressWarnings("unchecked")
 	public static ArrayList<SecurityQuestion> getQuestions(int passwordID) {
 		ArrayList<SecurityQuestion> result = null;
 		try {
@@ -184,7 +197,7 @@ public class ClientSocket {
 		try {
 			sendMsg(new QuestionAddRequest(passwordID, question, answer));
 			ServerResponse response = (ServerResponse) ois.readObject();
-			result = response.getSuccess();
+			result = (response.getStatus()!=0);
 		} catch(IOException|ClassNotFoundException e) { }
 		return result;
 	}
@@ -198,9 +211,15 @@ public class ClientSocket {
 		try {
 			sendMsg(new QuestionRemoveRequest(passwordID, questionID));
 			ServerResponse response = (ServerResponse) ois.readObject();
-			result = response.getSuccess();
+			result = (response.getStatus()!=0);
 		} catch(IOException|ClassNotFoundException e) { }
 		return result;
+	}
+	
+	public static void deleteAccount() {
+		try {
+			sendMsg(new ClientRequest(ClientRequest.TYPE_DELETE_ACCOUNT));
+		} catch(IOException e) { }
 	}
 	
 	/*
@@ -220,6 +239,8 @@ public class ClientSocket {
 			email=null;
 			loggedIn=false;
 			connected=false;
+			lastPage="";
+			viewPassword=null;
 		}
 	}
 	
@@ -233,5 +254,17 @@ public class ClientSocket {
 	
 	public static String getLastPage() {
 		return lastPage;
+	}
+	
+	public static boolean isGuest() {
+		return !loggedIn;
+	}
+	
+	public static void setViewPassword(DisplayPassword pass) {
+		viewPassword=pass;
+	}
+	
+	public static DisplayPassword getViewPassword() {
+		return viewPassword;
 	}
 }

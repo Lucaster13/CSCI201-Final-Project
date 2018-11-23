@@ -2,6 +2,9 @@ package application2;
 
 import java.io.IOException;
 
+import application2.UserHomeController.DisplayPassword;
+import client.ClientSocket;
+import client.GuestInfo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +21,7 @@ public class NewPasswordController
 {
 	@FXML private Text actiontarget;
     @FXML private TextField title;
+    @FXML private TextField username;
     @FXML private TextField password;
     @FXML private TextField confirmPassword;
     @FXML private Label strength;
@@ -46,7 +50,7 @@ public class NewPasswordController
     
 	@FXML protected void handleBackAction(ActionEvent event) 
     {
-		if(ClientInfo.getGuestStatus() == true)
+		if(ClientSocket.isGuest())
         {
     		Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
 	    	Parent root;
@@ -58,7 +62,6 @@ public class NewPasswordController
 		        primaryStage.setScene(scene);
 		        primaryStage.show();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         }
@@ -74,7 +77,6 @@ public class NewPasswordController
 		        primaryStage.setScene(scene);
 		        primaryStage.show();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         }
@@ -84,24 +86,55 @@ public class NewPasswordController
     {
         //actiontarget.setText("Sign in button pressed");
     	//System.out.println("Username: " + username.getText());
-    	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
-    	Parent root;
-		try {
-			root = FXMLLoader.load(getClass().getResource("PasswordDetails.fxml"));
-			Scene scene = new Scene(root, 800, 500);
-		    
-	        primaryStage.setTitle("Password Details");
-	        primaryStage.setScene(scene);
-	        primaryStage.show();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(title.getText().isEmpty()) {
+			actiontarget.setText("Please provide an application name");
+			return;
+		}
+		if(username.getText().isEmpty()) {
+			actiontarget.setText("Please provide the associated username");
+			return;
+		}
+		if(password.getText().isEmpty()) {
+			actiontarget.setText("Please provide the password to store");
+			return;
+		}
+		if(!password.getText().equals(confirmPassword.getText())) {
+			actiontarget.setText("Passwords do not match. Make sure you typed them in correctly!");
+			return;
+		}
+		DisplayPassword dp=null;
+		boolean error = false;
+		if(ClientSocket.isGuest()) {
+			dp = GuestInfo.addPassword(title.getText(), username.getText(), password.getText());
+		} else {
+			int passID = ClientSocket.addPassword(title.getText(), username.getText(), password.getText());
+			if(passID==0) error = true;
+			else {
+				dp = new DisplayPassword(passID, title.getText(), username.getText(), password.getText());
+			}
+		}
+		if(!error) {
+	    	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+	    	Parent root;
+			try {
+				ClientSocket.setViewPassword(dp);
+				root = FXMLLoader.load(getClass().getResource("PasswordDetails.fxml"));
+				Scene scene = new Scene(root, 800, 500);
+			    
+		        primaryStage.setTitle("Password Details");
+		        primaryStage.setScene(scene);
+		        primaryStage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else { //TODO: DISPLAY ERROR ADDING PASSWORD
+			actiontarget.setText("Error adding password.");
 		}
     }
 	
 	@FXML protected void handleAddQuestionAction(ActionEvent event) 
     {
-        if(ClientInfo.getGuestStatus() == true)
+        if(ClientSocket.isGuest())
         {
         	actiontarget.setText("Make account to access feature");
         }
@@ -117,31 +150,6 @@ public class NewPasswordController
 		        primaryStage.setScene(scene);
 		        primaryStage.show();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        }
-    }
-	
-	@FXML protected void handleViewQuestionsAction(ActionEvent event) 
-    {
-		if(ClientInfo.getGuestStatus() == true)
-        {
-        	actiontarget.setText("Make account to access feature");
-        }
-        else 
-        {
-	    	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
-	    	Parent root;
-			try {
-				root = FXMLLoader.load(getClass().getResource("ViewQuestions.fxml"));
-				Scene scene = new Scene(root, 800, 500);
-			    
-		        primaryStage.setTitle("View Questions");
-		        primaryStage.setScene(scene);
-		        primaryStage.show();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         }

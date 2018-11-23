@@ -1,10 +1,11 @@
 package application2;
  
 import java.io.IOException;
+import java.util.ArrayList;
 
-import application2.UserHomeController.Password;
+import application2.UserHomeController.DisplayPassword;
 import client.ClientSocket;
-import javafx.beans.property.SimpleStringProperty;
+import client.GuestInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,64 +24,49 @@ import javafx.stage.Stage;
  
 public class GuestHomeController 
 {
-    @FXML private Text actiontarget;
+    @FXML private TableView<DisplayPassword> passwordTable;
+    @FXML private TableColumn<DisplayPassword,String> accountName;
+    @FXML private TableColumn<DisplayPassword,String> password;
     
-    @FXML private TableView<Password> passwordTable;
-    @FXML private TableColumn<Password,String> accountName;
-    @FXML private TableColumn<Password,String> password;
-    
-    
-    //Make password hyperlink by changing Password class itself
-    //Password class is in UserHomeController
-    private final ObservableList<Password> data =
-        FXCollections.observableArrayList(
-            new Password("Hello", "Z"),
-            new Password("Sup", "X"),
-            new Password("Hi", "W"),
-            new Password("Bye", "Y"),
-            new Password("See you", "V"),
-            new Password("See you", "V"),
-            new Password("See you", "V"),
-            new Password("See you", "V"),
-            new Password("See you", "V"),
-            new Password("See you", "V")
-        );
-    
-    @SuppressWarnings({ })
 	@FXML public void initialize() 
     {
-        accountName.setCellValueFactory(
-            new PropertyValueFactory<Password,String>("accountName")
+		ObservableList<DisplayPassword> data =
+		        FXCollections.observableArrayList();
+		ArrayList<DisplayPassword> storedPass = GuestInfo.getPasswords();
+		for(DisplayPassword pass : storedPass) {
+			data.add(pass);
+		}
+		accountName.setCellValueFactory(
+            new PropertyValueFactory<DisplayPassword,String>("accountName")
         );
         password.setCellValueFactory(
-            new PropertyValueFactory<Password,String>("displayPassword")
+            new PropertyValueFactory<DisplayPassword,String>("displayPassword")
         );
         passwordTable.setRowFactory(tv -> {
-        	TableRow<Password> row = new TableRow<>();
+        	TableRow<DisplayPassword> row = new TableRow<>();
         	row.setOnMouseClicked(event -> {
         		if (!row.isEmpty() && event.getButton().equals(MouseButton.PRIMARY) 
         	             && event.getClickCount() == 2) {
-    	            Password clickedRow = row.getItem();
+        			DisplayPassword clickedRow = row.getItem();
     	            System.out.println("Clicked on: "+clickedRow.getAccountName());
-    	            /*Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+    	            Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
                 	Parent root;
             		try {
+            			ClientSocket.setViewPassword(clickedRow);
+            			ClientSocket.setLastPage("GuestHome");
             			root = FXMLLoader.load(getClass().getResource("PasswordDetails.fxml"));
             			Scene scene = new Scene(root, 800, 500);
-            		    
             	        primaryStage.setTitle("Password Details");
             	        primaryStage.setScene(scene);
             	        primaryStage.show();
             		} catch (IOException e) {
-            			// TODO Auto-generated catch block
             			e.printStackTrace();
-            		}*/
+            		}
     	        }
         	});
         	return row;
         });
         passwordTable.setItems(data);
-        System.out.println("done");
     }
     
     @FXML protected void handleNewPasswordAction(ActionEvent event) 
@@ -116,7 +102,6 @@ public class GuestHomeController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -124,6 +109,7 @@ public class GuestHomeController
     @FXML protected void handleEndSessionAction(ActionEvent event) 
     {
         //actiontarget.setText("Sign in button pressed");
+    	ClientSocket.logout();
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
@@ -134,7 +120,6 @@ public class GuestHomeController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

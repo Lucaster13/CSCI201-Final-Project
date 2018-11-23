@@ -169,8 +169,8 @@ public class ClientConnection extends Thread {
 	}
 	
 	public void addPassword(PasswordAddRequest request) throws IOException {
-		boolean success = DBHandler.addPassword(userID, request.getUsername(), request.getAppName(), request.getPassword());
-		sendMsg(new ServerResponse(success));
+		int id = DBHandler.addPassword(userID, request.getUsername(), request.getAppName(), request.getPassword());
+		sendMsg(new ServerResponse(id));
 	}
 	
 	public void removePassword(PasswordRemoveRequest request) throws IOException {
@@ -194,9 +194,7 @@ public class ClientConnection extends Thread {
 	}
 	
 	public void deleteAccount() throws IOException {
-		/*
-		 * TODO: ADD ACCOUNT DELETION TO DATABASE
-		 */
+		DBHandler.deleteAccount(userID);
 	}
 }
 
