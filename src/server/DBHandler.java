@@ -66,6 +66,7 @@ public class DBHandler {
 				System.out.println(e.getMessage());
 			} finally {
 				try {
+					if(rs != null) rs.close();
 					if(ps != null) ps.close();
 				} catch(SQLException e) {
 					System.out.println(e.getMessage());
@@ -73,6 +74,27 @@ public class DBHandler {
 			}
 		}
 		return info;
+	}
+	
+	public static void changeMaster(int userID, String newPass) {
+		if(conn==null) createConnection();
+		if(conn != null) {
+			PreparedStatement ps=null;
+			try {
+				ps=conn.prepareStatement("UPDATE user SET master_pass=? WHERE userID=?");
+				ps.setString(1, newPass);
+				ps.setInt(2, userID);
+				ps.executeUpdate();
+			} catch(SQLException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				try {
+					if(ps != null) ps.close();
+				} catch(SQLException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		}
 	}
 
 	/*
@@ -386,16 +408,8 @@ public class DBHandler {
 		
 		Returns: true if successful, false otherwise
 	 */
-	public static boolean editQuestion(int userID, int passwordID, int questionID, String property, String value) {
+	public static boolean editQuestion(int userID, int passwordID, int questionID, String newQ, String newA) {
 		boolean success = false;
-		String propName = "";
-		if(property.equals("Question")) {
-			propName="question";
-		} else if(property.equals("Answer")) {
-			propName="answer";
-		} else {
-			return success;
-		}
 		if(conn==null) createConnection();
 		if(conn != null) {
 			PreparedStatement ps=null;
@@ -407,9 +421,9 @@ public class DBHandler {
 				rs=ps.executeQuery();
 				if(rs.next()) { //Password belongs to the given user
 					ps.close();
-					ps=conn.prepareStatement("UPDATE security_question SET ? = ? WHERE passwordID=? AND questionID=?");
-					ps.setString(1, propName);
-					ps.setString(2, value);
+					ps=conn.prepareStatement("UPDATE security_question SET question=?, answer=? WHERE passwordID=? AND questionID=?");
+					ps.setString(1, newQ);
+					ps.setString(2, newA);
 					ps.setInt(3, passwordID);
 					ps.setInt(4, questionID);
 					ps.executeUpdate();

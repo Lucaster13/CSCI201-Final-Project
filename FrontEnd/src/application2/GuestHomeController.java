@@ -107,7 +107,6 @@ public class GuestHomeController
     
     @FXML protected void handleEndSessionAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
     	ClientSocket.logout();
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;

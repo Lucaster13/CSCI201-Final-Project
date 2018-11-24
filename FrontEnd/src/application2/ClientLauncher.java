@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class ClientLauncher extends Application
@@ -19,6 +20,7 @@ public class ClientLauncher extends Application
     
         stage.setTitle("Login Page");
         stage.setScene(scene);
+        stage.getIcons().add(new Image(this.getClass().getResource("trojanicon.jpg").toString()));
         stage.show();
     }
 }

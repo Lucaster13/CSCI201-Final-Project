@@ -6,15 +6,15 @@ public class QuestionEditRequest extends ClientRequest implements Serializable {
 	private static final long serialVersionUID = 1;
 	private int passwordID;
 	private int questionID;
-	private String property;
-	private String value;
+	private String newQ;
+	private String newA;
 	
-	public QuestionEditRequest(int passwordID, int questionID, String property, String value) {
+	public QuestionEditRequest(int passwordID, int questionID, String newQ, String newA) {
 		super(ClientRequest.TYPE_EDIT_QUESTION);
 		this.passwordID=passwordID;
 		this.questionID=questionID;
-		this.property=property;
-		this.value=value;
+		this.newQ=newQ;
+		this.newA=newA;
 	}
 	
 	public int getPasswordID() {
@@ -25,11 +25,11 @@ public class QuestionEditRequest extends ClientRequest implements Serializable {
 		return questionID;
 	}
 	
-	public String getProperty() {
-		return property;
+	public String getQuestion() {
+		return newQ;
 	}
 	
-	public String getValue() {
-		return value;
+	public String getAnswer() {
+		return newA;
 	}
 }

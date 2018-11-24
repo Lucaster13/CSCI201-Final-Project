@@ -63,8 +63,6 @@ public class NewAccountController
     			e.printStackTrace();
     		}
         } else {
-        	//actiontarget.setText("Sign in button pressed");
-        	//System.out.println("Username: " + username.getText());
         	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
         	Parent root;
     		try {
@@ -82,17 +80,15 @@ public class NewAccountController
 	
 	@FXML protected void handleRegisterAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
-    	//System.out.println("Username: " + username.getText());
 		String emailRegex = "^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$";
-		if(username.getText().isEmpty()) { //TODO: Display error of empty username
-			
-		} else if(password.getText().isEmpty()) { //TODO: Display error of empty password ALSO check that it meets minimum password strength
-			
-		} else if(!password.getText().equals(confirmPassword.getText())) { // TODO: Display error that password fields don't match
-			
-		} else if(email.getText().isEmpty()||!email.getText().matches(emailRegex)) { // TODO: Display error that email is invalid
-			
+		if(username.getText().isEmpty()) {
+			actiontarget.setText("Username cannot be empty.");
+		} else if(password.getText().isEmpty()) { //TODO: check that it meets minimum password strength
+			actiontarget.setText("Password cannot be empty.");
+		} else if(!password.getText().equals(confirmPassword.getText())) { 
+			actiontarget.setText("Passwords do not match.");
+		} else if(email.getText().isEmpty()||!email.getText().matches(emailRegex)) {
+			actiontarget.setText("Email is invalid.");
 		} else { //Valid inputs have been used
 			int loginSuccess = ClientSocket.createUser(username.getText(), password.getText(), email.getText());
 			if(loginSuccess == LoginResponse.TYPE_SUCCESS) { // Successful login
@@ -110,10 +106,10 @@ public class NewAccountController
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			} else if(loginSuccess == LoginResponse.TYPE_INVALID) { // TODO: DISPLAY MESSAGE USERNAME EXISTS
-				System.out.println("Invalid login creation");
-			} else { // TODO: DISPLAY MESSAGE SERVER ERROR
-				System.out.println("Server error");
+			} else if(loginSuccess == LoginResponse.TYPE_INVALID) { 
+				actiontarget.setText("Username already exists.");
+			} else { 
+				actiontarget.setText("Failed to communicate with server.");
 			}
 		}
     }

@@ -11,6 +11,7 @@ import data.ClientRequest;
 import data.LoginCreation;
 import data.LoginCredentials;
 import data.LoginResponse;
+import data.MasterPasswordChange;
 import data.Password;
 import data.PasswordAddRequest;
 import data.PasswordEditRequest;
@@ -33,6 +34,7 @@ public class ClientSocket {
 	private static boolean loggedIn=false;
 	private static String lastPage="";
 	private static DisplayPassword viewPassword=null;
+	private static String newPass=null;
 	
 	private static boolean createConnection() {
 		try {
@@ -186,10 +188,10 @@ public class ClientSocket {
 		return result;
 	}
 	
-	public static boolean editQuestion(int passwordID, int questionID, String property, String value) {
+	public static boolean editQuestion(int passwordID, int questionID, String newQ, String newA) {
 		boolean result = false;
 		try {
-			sendMsg(new QuestionEditRequest(passwordID, questionID, property, value));
+			sendMsg(new QuestionEditRequest(passwordID, questionID, newQ, newA));
 			ServerResponse response = (ServerResponse) ois.readObject();
 			result = (response.getStatus()!=0);
 		} catch(IOException|ClassNotFoundException e) { }
@@ -244,6 +246,16 @@ public class ClientSocket {
 		} catch(IOException e) { }
 	}
 	
+	public static void setNewPass(String password) {
+		newPass=password;
+	}
+	
+	public static void changeMasterPass() {
+		try {
+			sendMsg(new MasterPasswordChange(newPass));
+		} catch(IOException e) { }
+	}
+	
 	/*
 	 * Returns the email of the user if loggedIn
 	 */
@@ -263,6 +275,7 @@ public class ClientSocket {
 			connected=false;
 			lastPage="";
 			viewPassword=null;
+			newPass=null;
 		}
 	}
 	

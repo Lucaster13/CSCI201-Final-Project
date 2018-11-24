@@ -14,6 +14,7 @@ public class ClientRequest implements Serializable {
 	public static final int TYPE_DELETE_ACCOUNT = 6;
 	public static final int TYPE_EDIT_PASSWORD = 7;
 	public static final int TYPE_EDIT_QUESTION = 8;
+	public static final int TYPE_MASTER_PASS = 9;
 	public static final int TYPE_LOGOUT = 10;
 
 	private int type;

@@ -1,4 +1,4 @@
-package data;
+package client;
 
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;

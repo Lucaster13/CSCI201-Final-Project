@@ -27,7 +27,10 @@ public class LoginPageController
     
     @FXML protected void handleSignInAction(ActionEvent event) 
     {
-    	if(username.getText().isEmpty() || password.getText().isEmpty()) return;
+    	if(username.getText().isEmpty() || password.getText().isEmpty()) {
+    		actiontarget.setText("One of the above fields is blank.");
+    		return;
+    	}
     	
     	int loginSuccess = ClientSocket.login(username.getText(), password.getText());
     	

@@ -3,7 +3,6 @@ package application2;
 import java.io.IOException;
 
 import client.ClientSocket;
-import data.LoginResponse;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +21,6 @@ public class EmailVerifyController
     
     @FXML public void initialize() 
     {
-    	//Replace the below email with actual client's email
     	String email = ClientSocket.getEmail();
     	String displayEmail="";
     	boolean foundAt = false;
@@ -42,13 +40,14 @@ public class EmailVerifyController
     
     @FXML protected void handleVerifyAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
-    	//System.out.println("Username: " + username.getText());
     	String inputCode = code.getText();
     	String regex = "\\d{6}";
     	if(inputCode.matches(regex)) { //Valid 6 digit number
     		boolean validCode = ClientSocket.verifyCode(Integer.valueOf(inputCode));
     		if(validCode) {
+    			if(ClientSocket.getLastPage().equals("ManageAccount")) { // Change password
+    				ClientSocket.changeMasterPass();
+    			}    			
     			Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
             	Parent root;
         		try {
@@ -61,11 +60,11 @@ public class EmailVerifyController
         		} catch (IOException e) {
         			e.printStackTrace();
         		}
-    		} else { //TODO: DISPLAY MESSAGE OF INVALID CODE
-    			
+    		} else { 
+    			actiontarget.setText("Invalid Code.");
     		}
-    	} else { //TODO: DISPLAY MESSAGE THAT CODE IS IN AN INVALID FORMAT
-    		
+    	} else { 
+    		actiontarget.setText("Code is a 6-digit number.");
     	}
     }
 }

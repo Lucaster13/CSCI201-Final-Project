@@ -10,6 +10,7 @@ import data.ClientRequest;
 import data.LoginCreation;
 import data.LoginCredentials;
 import data.LoginResponse;
+import data.MasterPasswordChange;
 import data.Password;
 import data.PasswordAddRequest;
 import data.PasswordEditRequest;
@@ -160,6 +161,9 @@ public class ClientConnection extends Thread {
 				case ClientRequest.TYPE_EDIT_QUESTION:
 					editQuestion((QuestionEditRequest) msg);
 					break;
+				case ClientRequest.TYPE_MASTER_PASS:
+					changeMaster((MasterPasswordChange) msg);
+					break;
 				case ClientRequest.TYPE_LOGOUT:
 					loggedOut=true;
 					break;
@@ -192,7 +196,7 @@ public class ClientConnection extends Thread {
 	}
 	
 	public void editQuestion(QuestionEditRequest request) throws IOException {
-		boolean success = DBHandler.editQuestion(userID, request.getPasswordID(), request.getQuestionID(), request.getProperty(), request.getValue());
+		boolean success = DBHandler.editQuestion(userID, request.getPasswordID(), request.getQuestionID(), request.getQuestion(), request.getAnswer());
 		sendMsg(new ServerResponse(success));
 	}	
 	
@@ -209,6 +213,10 @@ public class ClientConnection extends Thread {
 	public void removeQuestion(QuestionRemoveRequest request) throws IOException {
 		boolean success = DBHandler.removeQuestion(userID, request.getPasswordID(), request.getQuestionID());
 		sendMsg(new ServerResponse(success));
+	}
+	
+	public void changeMaster(MasterPasswordChange request) {
+		DBHandler.changeMaster(userID, request.getNewPass());
 	}
 	
 	public void deleteAccount() throws IOException {

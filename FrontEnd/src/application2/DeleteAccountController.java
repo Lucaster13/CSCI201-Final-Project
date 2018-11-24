@@ -2,6 +2,7 @@ package application2;
 
 import java.io.IOException;
 
+import client.ClientSocket;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,8 +15,6 @@ public class DeleteAccountController
 {
 	@FXML protected void handleBackAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
-    	//System.out.println("Username: " + username.getText());
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
@@ -26,15 +25,14 @@ public class DeleteAccountController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
     
     @FXML protected void handleDeleteAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
-    	//System.out.println("Username: " + username.getText());
+    	ClientSocket.deleteAccount();
+    	ClientSocket.logout();
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
@@ -45,7 +43,6 @@ public class DeleteAccountController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

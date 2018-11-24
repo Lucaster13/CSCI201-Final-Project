@@ -76,7 +76,6 @@ public class UserHomeController
     
     @FXML protected void handleNewPasswordAction(ActionEvent event) 
     {
-    	//actiontarget.setText("Sign in button pressed");
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {

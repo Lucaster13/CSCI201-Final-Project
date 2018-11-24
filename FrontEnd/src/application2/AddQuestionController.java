@@ -2,12 +2,14 @@ package application2;
 
 import java.io.IOException;
 
+import client.ClientSocket;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -15,41 +17,40 @@ import javafx.stage.Stage;
 public class AddQuestionController 
 {
 	@FXML private Text actiontarget;
-    @FXML private TextField username;
-    @FXML private TextField password;
-    @FXML private TextField confirmPassword;
-    @FXML private TextField email;
+    @FXML private TextArea question;
+    @FXML private TextField answer;
 	
 	@FXML protected void handleBackAction(ActionEvent event) 
     {
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
-			root = FXMLLoader.load(getClass().getResource("NewPassword.fxml"));
+			root = FXMLLoader.load(getClass().getResource("PasswordDetails.fxml"));
 			Scene scene = new Scene(root, 800, 500);
-		    
-	        primaryStage.setTitle("New Password");
+	        primaryStage.setTitle("Password Details");
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
 	
 	@FXML protected void handleAddAction(ActionEvent event) 
     {
-    	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+    	if(question.getText().trim().isEmpty()||answer.getText().trim().isEmpty()) {
+    		actiontarget.setText("Some fields were left blank.");
+    		return;
+    	}
+    	ClientSocket.addQuestion(ClientSocket.getViewPassword().getPassID(), question.getText().trim(), answer.getText().trim());
+		Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
-			root = FXMLLoader.load(getClass().getResource("NewPassword.fxml"));
+			root = FXMLLoader.load(getClass().getResource("PasswordDetails.fxml"));
 			Scene scene = new Scene(root, 800, 500);
-		    
-	        primaryStage.setTitle("New Password");
+	        primaryStage.setTitle("Password Details");
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

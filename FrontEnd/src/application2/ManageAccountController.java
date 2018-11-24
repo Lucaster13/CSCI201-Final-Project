@@ -16,7 +16,8 @@ import javafx.stage.Stage;
 public class ManageAccountController 
 {
 	@FXML private Text actiontarget;
-	@FXML private TextField newEmail;
+	@FXML private TextField password;
+	@FXML private TextField confirmPassword;
 	
 	@FXML protected void handleBackAction(ActionEvent event) 
     {
@@ -30,14 +31,17 @@ public class ManageAccountController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
 	
 	@FXML protected void handleChangeAction(ActionEvent event) 
     {
-		ClientInfo.verifyInManage();
+		if(password.getText().isEmpty() || !password.getText().equals(confirmPassword.getText())) {
+			actiontarget.setText("Password fields do not match.");
+			return;
+		}
+		ClientSocket.setNewPass(password.getText());
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
@@ -49,7 +53,6 @@ public class ManageAccountController
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
