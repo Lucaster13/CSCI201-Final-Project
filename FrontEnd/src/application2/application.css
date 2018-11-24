@@ -142,11 +142,11 @@
     -fx-min-height: 0;
 }
 
-.noheader .table-row-cell:empty {
+.hideempty .table-row-cell:empty {
     -fx-background-color: transparent;
 }
  
-.noheader .table-row-cell:empty .table-cell {
+.hideempty .table-row-cell:empty .table-cell {
     -fx-border-width: 0px;
 }
 

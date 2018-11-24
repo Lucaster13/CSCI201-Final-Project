@@ -164,11 +164,11 @@ public class DBHandler {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("SELECT question, answer FROM security_question WHERE passwordID=?");
+				ps=conn.prepareStatement("SELECT security_questionID, question, answer FROM security_question WHERE passwordID=?");
 				ps.setInt(1, passwordID);
 				rs=ps.executeQuery();
 				while(rs.next()) {
-					results.add(new SecurityQuestion(rs.getString("question"),rs.getString("answer")));
+					results.add(new SecurityQuestion(rs.getInt("security_questionID"), rs.getString("question"),rs.getString("answer")));
 				}
 			} catch(SQLException e) {
 				System.out.println(e.getMessage());
@@ -232,7 +232,7 @@ public class DBHandler {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("SELECT COUNT(*) FROM password WHERE userID=? AND passwordID=?");
+				ps=conn.prepareStatement("SELECT * FROM password WHERE userID=? AND passwordID=?");
 				ps.setInt(1, userID);
 				ps.setInt(2, passwordID);
 				rs=ps.executeQuery();
@@ -245,6 +245,55 @@ public class DBHandler {
 					ps=conn.prepareStatement("DELETE FROM password WHERE userID=? AND passwordID=?");
 					ps.setInt(1, userID);
 					ps.setInt(2, passwordID);
+					ps.executeUpdate();
+					success=true;
+				}
+			} catch(SQLException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				try {
+					if(rs != null) rs.close();
+					if(ps != null) ps.close();
+				} catch(SQLException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		}
+		return success;
+	}
+	
+	/*
+		Edit a password
+		
+		Returns: true if successful, false otherwise
+	 */
+	public static boolean editPassword(int userID, int passwordID, String property, String value) {
+		boolean success = false;
+		String propName = "";
+		if(property.equals("Application")) {
+			propName="app_name";
+		} else if(property.equals("Username")) {
+			propName="username";
+		} else if(property.equals("Password")) {
+			propName="encrypted_pass";
+		} else {
+			return success;
+		}
+		if(conn==null) createConnection();
+		if(conn != null) {
+			PreparedStatement ps=null;
+			ResultSet rs=null;
+			try {
+				ps=conn.prepareStatement("SELECT * FROM password WHERE userID=? AND passwordID=?");
+				ps.setInt(1, userID);
+				ps.setInt(2, passwordID);
+				rs=ps.executeQuery();
+				if(rs.next()) { //Password belongs to the given user
+					ps.close();
+					ps=conn.prepareStatement("UPDATE password SET ? = ? WHERE passwordID=?");
+					ps.setString(1, propName);
+					ps.setString(2, value);
+					ps.setInt(3, passwordID);
 					ps.executeUpdate();
 					success=true;
 				}
@@ -306,14 +355,63 @@ public class DBHandler {
 			PreparedStatement ps=null;
 			ResultSet rs=null;
 			try {
-				ps=conn.prepareStatement("SELECT COUNT(*) FROM password WHERE userID=? AND passwordID=?");
+				ps=conn.prepareStatement("SELECT * FROM password WHERE userID=? AND passwordID=?");
 				ps.setInt(1, userID);
 				ps.setInt(2, passwordID);
 				rs=ps.executeQuery();
-				if(rs.next()) { //Password belongs to the given user, this security question
+				if(rs.next()) { //Password belongs to the given user, delete this security question
 					ps.close();
-					ps=conn.prepareStatement("DELETE FROM security_question WHERE questionID=?");
+					ps=conn.prepareStatement("DELETE FROM security_question WHERE questionID=? AND passwordID=?");
 					ps.setInt(1, questionID);
+					ps.setInt(2, passwordID);
+					ps.executeUpdate();
+					success=true;
+				}
+			} catch(SQLException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				try {
+					if(rs != null) rs.close();
+					if(ps != null) ps.close();
+				} catch(SQLException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		}
+		return success;
+	}
+	
+	/*
+		Edit a question
+		
+		Returns: true if successful, false otherwise
+	 */
+	public static boolean editQuestion(int userID, int passwordID, int questionID, String property, String value) {
+		boolean success = false;
+		String propName = "";
+		if(property.equals("Question")) {
+			propName="question";
+		} else if(property.equals("Answer")) {
+			propName="answer";
+		} else {
+			return success;
+		}
+		if(conn==null) createConnection();
+		if(conn != null) {
+			PreparedStatement ps=null;
+			ResultSet rs=null;
+			try {
+				ps=conn.prepareStatement("SELECT * FROM password WHERE userID=? AND passwordID=?");
+				ps.setInt(1, userID);
+				ps.setInt(2, passwordID);
+				rs=ps.executeQuery();
+				if(rs.next()) { //Password belongs to the given user
+					ps.close();
+					ps=conn.prepareStatement("UPDATE security_question SET ? = ? WHERE passwordID=? AND questionID=?");
+					ps.setString(1, propName);
+					ps.setString(2, value);
+					ps.setInt(3, passwordID);
+					ps.setInt(4, questionID);
 					ps.executeUpdate();
 					success=true;
 				}

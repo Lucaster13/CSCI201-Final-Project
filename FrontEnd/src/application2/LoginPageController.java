@@ -30,7 +30,6 @@ public class LoginPageController
     	if(username.getText().isEmpty() || password.getText().isEmpty()) return;
     	
     	int loginSuccess = ClientSocket.login(username.getText(), password.getText());
-    	//ClientInfo c = new ClientInfo(username.getText(), false);
     	
     	if(loginSuccess==LoginResponse.TYPE_SUCCESS) {
     		System.out.println("Successful login");
@@ -47,17 +46,16 @@ public class LoginPageController
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
-    	} else if(loginSuccess==LoginResponse.TYPE_INVALID) { // TODO: DISPLAY INVALID CREDENTIALS MESSAGE
-    		System.out.println("Invalid login");
-    	} else { // TODO: DISPLAY SERVER ERROR
-    		System.out.println("Server error");
+    	} else if(loginSuccess==LoginResponse.TYPE_INVALID) {
+    		actiontarget.setText("Invalid credentials.");
+    	} else {
+    		actiontarget.setText("Communication with server failed.");
     	}
     }
     
     
     @FXML protected void handleNewAccountAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {

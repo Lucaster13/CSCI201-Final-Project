@@ -13,8 +13,10 @@ import data.LoginCredentials;
 import data.LoginResponse;
 import data.Password;
 import data.PasswordAddRequest;
+import data.PasswordEditRequest;
 import data.PasswordRemoveRequest;
 import data.QuestionAddRequest;
+import data.QuestionEditRequest;
 import data.QuestionGetRequest;
 import data.QuestionRemoveRequest;
 import data.SecurityQuestion;
@@ -168,6 +170,26 @@ public class ClientSocket {
 		boolean result = false;
 		try {
 			sendMsg(new PasswordRemoveRequest(passwordID));
+			ServerResponse response = (ServerResponse) ois.readObject();
+			result = (response.getStatus()!=0);
+		} catch(IOException|ClassNotFoundException e) { }
+		return result;
+	}
+	
+	public static boolean editPassword(int passwordID, String property, String value) {
+		boolean result = false;
+		try {
+			sendMsg(new PasswordEditRequest(passwordID, property, value));
+			ServerResponse response = (ServerResponse) ois.readObject();
+			result = (response.getStatus()!=0);
+		} catch(IOException|ClassNotFoundException e) { }
+		return result;
+	}
+	
+	public static boolean editQuestion(int passwordID, int questionID, String property, String value) {
+		boolean result = false;
+		try {
+			sendMsg(new QuestionEditRequest(passwordID, questionID, property, value));
 			ServerResponse response = (ServerResponse) ois.readObject();
 			result = (response.getStatus()!=0);
 		} catch(IOException|ClassNotFoundException e) { }

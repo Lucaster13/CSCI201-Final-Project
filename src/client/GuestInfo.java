@@ -14,6 +14,22 @@ public class GuestInfo {
 		return dp;
 	}
 	
+	public static void editPassword(int passID, String property, String value) {
+		for(int i=0; i<passwordList.size(); i++) {
+			if(passwordList.get(i).getPassID()==passID) {
+				DisplayPassword dp = passwordList.get(i);
+				if(property.equals("Application")) {
+					dp.setAppname(value);
+				} else if(property.equals("Username")) {
+					dp.setUsername(value);
+				} else if(property.equals("Password")) {
+					dp.setPassword(value);
+				}
+				return;
+			}
+		}
+	}
+	
 	public static void reset() {
 		passwordList = new ArrayList<DisplayPassword>();
 		count=0;

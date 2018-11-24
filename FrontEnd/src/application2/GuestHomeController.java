@@ -19,7 +19,6 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
  
 public class GuestHomeController 
@@ -34,7 +33,7 @@ public class GuestHomeController
 		        FXCollections.observableArrayList();
 		ArrayList<DisplayPassword> storedPass = GuestInfo.getPasswords();
 		for(DisplayPassword pass : storedPass) {
-			data.add(pass);
+			data.add(pass.hide());
 		}
 		accountName.setCellValueFactory(
             new PropertyValueFactory<DisplayPassword,String>("accountName")

@@ -3,7 +3,6 @@ package application2;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import application2.UserHomeController.DisplayPassword;
 import client.ClientSocket;
 import data.Password;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,7 +23,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
  
 public class UserHomeController 
@@ -147,10 +145,10 @@ public class UserHomeController
     public static class DisplayPassword {
     	private int passID;
     	private String username;
-        private final SimpleStringProperty accountName;
+        private SimpleStringProperty accountName;
         private Hyperlink displayPassword=new Hyperlink("•••••••");
         private boolean hidden=true;
-        private final String password;
+        private String password;
 
         public DisplayPassword(int passID, String accountName, String username, String password) {
             this.passID=passID;
@@ -164,7 +162,7 @@ public class UserHomeController
                 	 if(event.getButton().equals(MouseButton.PRIMARY)){
                          if(event.getClickCount() == 1){
                         	 if(hidden) {
-                        		 displayPassword.setText(password);
+                        		 displayPassword.setText(getPassword());
                         		 hidden=false;
                         	 } else {
                         		 displayPassword.setText("•••••••");
@@ -196,5 +194,27 @@ public class UserHomeController
         public int getPassID() {
         	return passID;
         }
+
+		public void setPassID(int passID) {
+			this.passID=passID;
+		}
+		
+		public void setPassword(String password) {
+			this.password = password;
+		}
+		
+		public void setAppname(String appName) {
+			this.accountName = new SimpleStringProperty(appName);
+		}
+		
+		public void setUsername(String username) {
+			this.username = username;
+		}
+		
+		public DisplayPassword hide() {
+			displayPassword.setText("•••••••");
+   		 	hidden=true;
+   		 	return this;
+		}
     }
 }

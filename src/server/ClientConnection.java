@@ -12,8 +12,10 @@ import data.LoginCredentials;
 import data.LoginResponse;
 import data.Password;
 import data.PasswordAddRequest;
+import data.PasswordEditRequest;
 import data.PasswordRemoveRequest;
 import data.QuestionAddRequest;
+import data.QuestionEditRequest;
 import data.QuestionGetRequest;
 import data.QuestionRemoveRequest;
 import data.SecurityQuestion;
@@ -152,6 +154,12 @@ public class ClientConnection extends Thread {
 				case ClientRequest.TYPE_DELETE_ACCOUNT:
 					deleteAccount();
 					break;
+				case ClientRequest.TYPE_EDIT_PASSWORD:
+					editPassword((PasswordEditRequest) msg);
+					break;
+				case ClientRequest.TYPE_EDIT_QUESTION:
+					editQuestion((QuestionEditRequest) msg);
+					break;
 				case ClientRequest.TYPE_LOGOUT:
 					loggedOut=true;
 					break;
@@ -177,6 +185,16 @@ public class ClientConnection extends Thread {
 		boolean success = DBHandler.removePassword(userID, request.getPasswordID());
 		sendMsg(new ServerResponse(success));
 	}
+	
+	public void editPassword(PasswordEditRequest request) throws IOException {
+		boolean success = DBHandler.editPassword(userID, request.getPasswordID(), request.getProperty(), request.getValue());
+		sendMsg(new ServerResponse(success));
+	}
+	
+	public void editQuestion(QuestionEditRequest request) throws IOException {
+		boolean success = DBHandler.editQuestion(userID, request.getPasswordID(), request.getQuestionID(), request.getProperty(), request.getValue());
+		sendMsg(new ServerResponse(success));
+	}	
 	
 	public void sendQuestionList(QuestionGetRequest request) throws IOException {
 		ArrayList<SecurityQuestion> questions = DBHandler.getSecurityQuestions(request.getPasswordID());
