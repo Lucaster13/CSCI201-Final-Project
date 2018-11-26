@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?language javascript?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<HBox id="inBack" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: rgb(150, 0, 0);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application2.ManageAccountController">
+<HBox id="inBack" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: rgb(150, 0, 0);" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application2.ManageAccountController">
    <children>
    <GridPane alignment="center" hgap="10" minWidth="200.0" vgap="10">
    <padding>
@@ -26,7 +20,7 @@
          </padding>
       <children>
       
-      <Text id="welcome-text" text="Manage Account" wrappingWidth="412.80377197265625" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0">
+      <Text id="welcome-text" text="Manage Account" wrappingWidth="450.80377197265625" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0">
                <GridPane.margin>
                   <Insets bottom="40.0" />
                </GridPane.margin>
@@ -34,17 +28,17 @@
        
           <Label text="Change Password:" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />          
               
-      	<HBox alignment="bottom_center" spacing="10" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-      	
-      	<HBox alignment="bottom_center" spacing="10" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+      	<HBox alignment="bottom_center" spacing="10" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="17" />
       	
       	<Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-           <Button onAction="#handleBackAction" text="Back" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
-           <Button onAction="#handleChangeAction" text="Change" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Button mnemonicParsing="false" onAction="#handleDeleteAction" prefHeight="26.0" prefWidth="222.0" text="DELETE ACCOUNT" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+           <Button onAction="#handleBackAction" text="Back" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+            <Button mnemonicParsing="false" onAction="#handleDeleteAction" prefHeight="26.0" prefWidth="135.0" text="DELETE ACCOUNT" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
             <PasswordField fx:id="password" promptText="New Password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <PasswordField fx:id="confirmPassword" promptText="Confirm New Password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label text="Confirm Password:" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+            <Label text="Strength:           " GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label id="strength" fx:id="strength" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+           <Button onAction="#handleChangeAction" text="Change" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
       </children>      
    	       
    	       
@@ -56,8 +50,18 @@
             <ColumnConstraints />
             <ColumnConstraints />
             <ColumnConstraints />
+            <ColumnConstraints />
          </columnConstraints>
          <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />

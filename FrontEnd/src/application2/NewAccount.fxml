@@ -50,8 +50,8 @@
       	<HBox alignment="bottom_center" spacing="10" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
       	
       	<Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Label text="Strength:" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <Label fx:id="strength" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Label text=" Strength:           " GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label id="strength" fx:id="strength" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
            <Button onAction="#handleRegisterAction" text="Register" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
            <Button onAction="#handleBackAction" text="Back" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
       </children>      

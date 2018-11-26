@@ -9,7 +9,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -18,6 +20,39 @@ public class ManageAccountController
 	@FXML private Text actiontarget;
 	@FXML private TextField password;
 	@FXML private TextField confirmPassword;
+	@FXML private Label strength;
+	
+    @FXML public void initialize() 
+    {
+    	password.textProperty().addListener((observable, oldValue, newValue) -> {
+    		//Change this part so that it corresponds to the real password strengths
+    		if(password.getLength() < 2)
+    		{
+    			strength.setText("Very Weak");
+    			strength.setTextFill(Color.RED);
+    		}
+    		else if(password.getLength() < 4)
+    		{
+    			strength.setText("Mediocre");
+    			strength.setTextFill(Color.ORANGE);
+    		}
+    		else if(password.getLength() < 6)
+    		{
+    			strength.setText("Fine");
+    			strength.setTextFill(Color.YELLOW);
+    		}
+    		else if(password.getLength() < 8)
+    		{
+    			strength.setText("Strong");
+    			strength.setTextFill(Color.LIGHTGREEN);
+    		}
+    		else
+    		{
+    			strength.setText("Very Strong");
+    			strength.setTextFill(Color.DARKGREEN);
+    		}
+    	});
+    }
 	
 	@FXML protected void handleBackAction(ActionEvent event) 
     {
