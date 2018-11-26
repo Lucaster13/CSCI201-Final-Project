@@ -37,7 +37,7 @@
             <PasswordField fx:id="confirmPassword" promptText="Confirm New Password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label text="Confirm Password:" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
             <Label text="Strength:           " GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Label id="strength" fx:id="strength" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Label id="strength" fx:id="strength" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
            <Button onAction="#handleChangeAction" text="Change" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
       </children>      
    	       
