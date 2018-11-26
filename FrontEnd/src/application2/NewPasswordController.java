@@ -30,20 +30,30 @@ public class NewPasswordController
     {
     	password.textProperty().addListener((observable, oldValue, newValue) -> {
     		//Change this part so that it corresponds to the real password strengths
-    		if(password.getLength() < 3)
+    		if(password.getLength() < 2)
     		{
-    			strength.setText("Poor");
+    			strength.setText("Very Weak");
     			strength.setTextFill(Color.RED);
+    		}
+    		else if(password.getLength() < 4)
+    		{
+    			strength.setText("Mediocre");
+    			strength.setTextFill(Color.ORANGE);
     		}
     		else if(password.getLength() < 6)
     		{
     			strength.setText("Fine");
     			strength.setTextFill(Color.YELLOW);
     		}
+    		else if(password.getLength() < 8)
+    		{
+    			strength.setText("Strong");
+    			strength.setTextFill(Color.LIGHTGREEN);
+    		}
     		else
     		{
-    			strength.setText("Great");
-    			strength.setTextFill(Color.GREEN);
+    			strength.setText("Very Strong");
+    			strength.setTextFill(Color.DARKGREEN);
     		}
     	});
     }
