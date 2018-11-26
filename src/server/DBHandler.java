@@ -383,7 +383,7 @@ public class DBHandler {
 				rs=ps.executeQuery();
 				if(rs.next()) { //Password belongs to the given user, delete this security question
 					ps.close();
-					ps=conn.prepareStatement("DELETE FROM security_question WHERE questionID=? AND passwordID=?");
+					ps=conn.prepareStatement("DELETE FROM security_question WHERE security_questionID=? AND passwordID=?");
 					ps.setInt(1, questionID);
 					ps.setInt(2, passwordID);
 					ps.executeUpdate();
@@ -421,7 +421,7 @@ public class DBHandler {
 				rs=ps.executeQuery();
 				if(rs.next()) { //Password belongs to the given user
 					ps.close();
-					ps=conn.prepareStatement("UPDATE security_question SET question=?, answer=? WHERE passwordID=? AND questionID=?");
+					ps=conn.prepareStatement("UPDATE security_question SET question=?, answer=? WHERE passwordID=? AND security_questionID=?");
 					ps.setString(1, newQ);
 					ps.setString(2, newA);
 					ps.setInt(3, passwordID);

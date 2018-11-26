@@ -127,9 +127,10 @@ public class ClientSocket {
 				if(isGuest()) { //Was a guest
 					ArrayList<DisplayPassword> guestPass = GuestInfo.getPasswords();
 					for(DisplayPassword pass : guestPass) {
-						addPassword(pass.getUsername(), pass.getAccountName(), pass.getPassword());
+						addPassword(pass.getAccountName(), pass.getUsername(), pass.getPassword());
 					}
 					loggedIn=true;
+					GuestInfo.reset();
 				}
 			}
 		} catch(IOException|ClassNotFoundException e) { }

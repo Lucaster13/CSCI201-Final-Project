@@ -17,6 +17,7 @@ public class GuestInfo {
 	public static void editPassword(int passID, String property, String value) {
 		for(int i=0; i<passwordList.size(); i++) {
 			if(passwordList.get(i).getPassID()==passID) {
+				System.out.println("Edit");
 				DisplayPassword dp = passwordList.get(i);
 				if(property.equals("Application")) {
 					dp.setAppname(value);
@@ -28,6 +29,7 @@ public class GuestInfo {
 				return;
 			}
 		}
+		System.out.println("No Edit");
 	}
 	
 	public static void reset() {

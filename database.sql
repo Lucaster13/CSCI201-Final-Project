@@ -6,7 +6,7 @@ CREATE TABLE user (
 	username varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL UNIQUE,
 	master_pass varchar(350) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 	last_update datetime NOT NULL,
-	email varchar(100) NOT NULL UNIQUE
+	email varchar(100) NOT NULL
 );
 CREATE TABLE password (
 	passwordID int(15) PRIMARY KEY NOT NULL AUTO_INCREMENT,

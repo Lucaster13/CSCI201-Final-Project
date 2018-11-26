@@ -108,6 +108,7 @@ public class GuestHomeController
     @FXML protected void handleEndSessionAction(ActionEvent event) 
     {
     	ClientSocket.logout();
+    	GuestInfo.reset();
     	Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     	Parent root;
 		try {
