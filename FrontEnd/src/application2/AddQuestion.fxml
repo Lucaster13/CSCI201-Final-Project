@@ -35,12 +35,12 @@
           <Label text="Question:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
        
           <Label text="Answer:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-       
+       	<TextArea fx:id="question" prefHeight="59.0" prefWidth="309.0" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
           <TextField fx:id="answer" GridPane.columnIndex="2" GridPane.rowIndex="2" />
       	
       	<Text fx:id="actiontarget" GridPane.columnIndex="2" GridPane.rowIndex="7" />
            <Button onAction="#handleBackAction" text="Back" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
-            <TextArea fx:id="question" prefHeight="59.0" prefWidth="309.0" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            
             <Button mnemonicParsing="false" onAction="#handleAddAction" text="Add" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
             <ImageView fitHeight="150.0" fitWidth="142.0" pickOnBounds="true" preserveRatio="true">
                <image>
