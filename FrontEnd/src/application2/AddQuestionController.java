@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -19,6 +20,12 @@ public class AddQuestionController
 	@FXML private Text actiontarget;
     @FXML private TextArea question;
     @FXML private TextField answer;
+    @FXML private Button addButton;
+    
+    @FXML public void initialize() 
+    {
+    	addButton.setDefaultButton(true);	
+    }
 	
 	@FXML protected void handleBackAction(ActionEvent event) 
     {

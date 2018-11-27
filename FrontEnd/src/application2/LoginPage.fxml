@@ -52,7 +52,7 @@
       	<HBox alignment="bottom_center" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       	
       	<Text fx:id="actiontarget" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-           <Button onAction="#handleSignInAction" text="Sign In" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+           <Button fx:id="signInButton" onAction="#handleSignInAction" text="Sign In" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
            <Button onAction="#handleNewAccountAction" text="Create Account" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
            <Button onAction="#handleGuestSignInAction" text="Sign In As Guest" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
          <ImageView fitHeight="140.0" fitWidth="148.0" pickOnBounds="true" preserveRatio="true">

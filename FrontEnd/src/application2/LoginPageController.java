@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -19,10 +20,11 @@ public class LoginPageController
     @FXML private Text actiontarget;
     @FXML private TextField username;
     @FXML private TextField password;
+    @FXML private Button signInButton;
     
     @FXML public void initialize() 
     {
-    	
+    	signInButton.setDefaultButton(true);	
     }
     
     @FXML protected void handleSignInAction(ActionEvent event) 

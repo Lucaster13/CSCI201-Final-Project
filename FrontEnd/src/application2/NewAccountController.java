@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -25,9 +26,11 @@ public class NewAccountController
     @FXML private TextField confirmPassword;
     @FXML private TextField email;
     @FXML private Label strength;
+    @FXML private Button submitButton;
 	
     @FXML public void initialize() 
     {
+    	submitButton.setDefaultButton(true);
     	password.textProperty().addListener((observable, oldValue, newValue) -> {
     		//Change this part so that it corresponds to the real password strengths
     		int pwstrength = PasswordStrength.check(newValue);

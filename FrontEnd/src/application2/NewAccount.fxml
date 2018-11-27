@@ -94,7 +94,7 @@
                         <RowConstraints maxHeight="71.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                       <Button onAction="#handleRegisterAction" text="Register" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                       <Button fx:id="submitButton" onAction="#handleRegisterAction" text="Register" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>

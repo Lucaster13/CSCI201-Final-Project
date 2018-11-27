@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -18,9 +19,11 @@ public class EmailVerifyController
     @FXML private Text actiontarget;
     @FXML private TextField code;
     @FXML private Text sending;
+    @FXML private Button submitButton;
     
     @FXML public void initialize() 
     {
+    	submitButton.setDefaultButton(true);
     	String email = ClientSocket.getEmail();
     	String displayEmail="";
     	boolean foundAt = false;

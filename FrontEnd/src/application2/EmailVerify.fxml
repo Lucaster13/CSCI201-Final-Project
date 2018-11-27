@@ -26,7 +26,7 @@
 	<Text fx:id="actiontarget" textAlignment="CENTER" wrappingWidth="300.0" GridPane.halignment="CENTER" GridPane.rowIndex="4" />      
 	  
 	<HBox alignment="bottom_center" spacing="10" GridPane.rowIndex="5" />
-     <Button onAction="#handleVerifyAction" text="Verify" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+     <Button fx:id="submitButton" onAction="#handleVerifyAction" text="Verify" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
 	       
 	<stylesheets>
     	<URL value="@application.css" />
