@@ -7,6 +7,7 @@ import java.util.Optional;
 import application2.UserHomeController.DisplayPassword;
 import client.ClientSocket;
 import client.GuestInfo;
+import client.PasswordStrength;
 import data.SecurityQuestion;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -35,6 +36,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -58,6 +60,14 @@ public class PasswordDetailsController
     	data.add(new PasswordDetails("Application", passwordPicked.getAccountName()));
     	data.add(new PasswordDetails("Username", passwordPicked.getUsername()));
     	data.add(new PasswordDetails("Password", passwordPicked.getPassword()));
+    	int pwstrength = PasswordStrength.check(passwordPicked.getPassword());
+    	String strengthDisp = "Very Weak";
+		if(pwstrength <= 1) strengthDisp = "Very Weak";
+		else if(pwstrength == 2) strengthDisp = "Mediocre"; 
+		else if(pwstrength == 3) strengthDisp = "Fine"; 
+		else if(pwstrength == 4) strengthDisp = "Strong";
+		else if(pwstrength == 5) strengthDisp = "Very Strong";
+    	data.add(new PasswordDetails("Strength", strengthDisp));
         
     	passwordTable.setEditable(true);
     	field.setCellValueFactory(
@@ -79,6 +89,13 @@ public class PasswordDetailsController
                 	String oldVal = row.getInfo();
                 	String newVal = t.getNewValue();
                 	if(!oldVal.equals(newVal)) {
+                		int pwstrength = PasswordStrength.check(newVal);
+            			String strengthDisp = "Very Weak";
+            			if(pwstrength <= 1) strengthDisp = "Very Weak";
+            			else if(pwstrength == 2) strengthDisp = "Mediocre"; 
+            			else if(pwstrength == 3) strengthDisp = "Fine"; 
+            			else if(pwstrength == 4) strengthDisp = "Strong";
+            			else if(pwstrength == 5) strengthDisp = "Very Strong";
                 		/*
                 		 * POP UP TO CONFIRM
                 		 */
@@ -89,7 +106,7 @@ public class PasswordDetailsController
                 		else if(fieldChange.equals("Username")) fieldChangeDisplay="username";
                 		else if(fieldChange.equals("Password")) fieldChangeDisplay="password";
                 		alert.setHeaderText("Confirm change of "+fieldChangeDisplay+".");
-                		alert.setContentText("Are you sure you want to change "+fieldChangeDisplay+" from \""+oldVal+"\" to \""+newVal+"\"?");
+                		alert.setContentText("Are you sure you want to change "+fieldChangeDisplay+" from \""+oldVal+"\" to \""+newVal+"\"?\r\nNew strength is: "+strengthDisp);
 
                 		ButtonType buttonYes = new ButtonType("Yes");
                 		ButtonType buttonNo = new ButtonType("No", ButtonData.CANCEL_CLOSE);
@@ -99,6 +116,7 @@ public class PasswordDetailsController
                 		Optional<ButtonType> result = alert.showAndWait();
                 		if (result.get() == buttonYes){
                 			row.setInfo(newVal);
+                			data.set(3, new PasswordDetails("Strength", strengthDisp));
                     		if(ClientSocket.isGuest()) {
                     			GuestInfo.editPassword(passwordPicked.getPassID(), fieldChange, newVal);
                     		} else {
