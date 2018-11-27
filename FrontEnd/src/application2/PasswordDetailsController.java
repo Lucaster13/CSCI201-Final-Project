@@ -21,6 +21,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -121,6 +122,7 @@ public class PasswordDetailsController
         	ArrayList<SecurityQuestion> questions = ClientSocket.getQuestions(passwordPicked.getPassID());
         	if(questions != null) {
         		for(SecurityQuestion q : questions) {
+        			System.out.println("Question: "+q.getQuestionID());
         			questionData.add(new QuestionDisplay(q.getQuestionID(), q.getQuestion(), q.getAnswer()));
         		}
         	}
@@ -141,7 +143,7 @@ public class PasswordDetailsController
             		if (!row.isEmpty() && event.getButton().equals(MouseButton.PRIMARY) 
             	             && event.getClickCount() == 2) {
             			QuestionDisplay clickedRow = row.getItem();
-        	            System.out.println("Clicked on: "+clickedRow.getQuestion());
+        	            System.out.println("Clicked on: "+clickedRow.getQuestion()+" "+clickedRow.getQuestionID());
         	            
         	            /*
                 		 * POP UP TO CHANGE VALUES
@@ -170,8 +172,14 @@ public class PasswordDetailsController
         	            grid.add(new Label("Answer:"), 0, 1);
         	            grid.add(changeA, 1, 1);
         	            
-        	            Node changeButton = dialog.getDialogPane().lookupButton(buttonChange);
+        	            Button changeButton = (Button)dialog.getDialogPane().lookupButton(buttonChange);
         	            changeButton.setDisable(true);
+        	            changeButton.setDefaultButton(false);
+        	            Button deleteButton = (Button)dialog.getDialogPane().lookupButton(buttonDelete);
+        	            deleteButton.setDefaultButton(false);
+        	            Button cancelButton = (Button)dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+        	            cancelButton.setDefaultButton(true);
+        	            
         	            
         	            changeQ.textProperty().addListener((observable, oldValue, newValue) -> {
         	                changeButton.setDisable(newValue.trim().isEmpty()||changeA.getText().trim().isEmpty());
@@ -184,10 +192,17 @@ public class PasswordDetailsController
         	            
         	            dialog.setResultConverter(dialogButton -> {
         	                if(dialogButton == buttonChange) {
+        	                	System.out.println("Change button pressed");
         	                    return new Pair<>(changeQ.getText(), changeA.getText());
         	                } else if(dialogButton == buttonDelete) {
+        	                	System.out.println("Delete button pressed");
         	                	ClientSocket.removeQuestion(passwordPicked.getPassID(), clickedRow.getQuestionID());
-        	                	questionData.remove(clickedRow);
+        	                	for(int i=0; i<questionData.size(); i++) {
+        	            			if(questionData.get(i).getQuestionID()==clickedRow.getQuestionID()) {
+        	            				questionData.remove(i);
+        	            				break;
+        	            			}
+        	            		}
         	                }
         	                return null;
         	            });
@@ -196,9 +211,16 @@ public class PasswordDetailsController
         	            	String newQ = newSQ.getKey();
         	            	String newA = newSQ.getValue();
         	            	if(!clickedRow.getQuestion().equals(newQ) || !clickedRow.getAnswer().equals(newA)) {
+        	            		System.out.println("Change to "+newQ+" "+newA);
         	            		ClientSocket.editQuestion(passwordPicked.getPassID(), clickedRow.getQuestionID(), newQ, newA);
         	            		clickedRow.setQuestion(newQ);
         	            		clickedRow.setAnswer(newA);
+        	            		for(int i=0; i<questionData.size(); i++) {
+        	            			if(questionData.get(i).getQuestionID()==clickedRow.getQuestionID()) {
+                	            		questionData.set(i, clickedRow);
+                	            		break;
+        	            			}
+        	            		}
         	            	}
         	            });
         	        }
@@ -311,6 +333,7 @@ public class PasswordDetailsController
     	private SimpleStringProperty question;
     	private SimpleStringProperty answer;
     	QuestionDisplay(int questionID, String question, String answer) {
+    		this.questionID=questionID;
     		this.question=new SimpleStringProperty(question);
     		this.answer=new SimpleStringProperty(answer);
     	}

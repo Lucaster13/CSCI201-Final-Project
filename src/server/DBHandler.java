@@ -293,11 +293,11 @@ public class DBHandler {
 		boolean success = false;
 		String propName = "";
 		if(property.equals("Application")) {
-			propName="app_name";
+			propName="UPDATE password SET app_name = ? WHERE passwordID=?";
 		} else if(property.equals("Username")) {
-			propName="username";
+			propName="UPDATE password SET username = ? WHERE passwordID=?";
 		} else if(property.equals("Password")) {
-			propName="encrypted_pass";
+			propName="UPDATE password SET encrypted_pass = ? WHERE passwordID=?";
 		} else {
 			return success;
 		}
@@ -312,10 +312,9 @@ public class DBHandler {
 				rs=ps.executeQuery();
 				if(rs.next()) { //Password belongs to the given user
 					ps.close();
-					ps=conn.prepareStatement("UPDATE password SET ? = ? WHERE passwordID=?");
-					ps.setString(1, propName);
-					ps.setString(2, value);
-					ps.setInt(3, passwordID);
+					ps=conn.prepareStatement(propName);
+					ps.setString(1, value);
+					ps.setInt(2, passwordID);
 					ps.executeUpdate();
 					success=true;
 				}
@@ -371,6 +370,7 @@ public class DBHandler {
 		Returns: true if successful, false otherwise
 	 */
 	public static boolean removeQuestion(int userID, int passwordID, int questionID) {
+		System.out.println("Attempting to remove "+userID+" "+passwordID+" "+questionID);
 		boolean success = false;
 		if(conn==null) createConnection();
 		if(conn != null) {
@@ -382,12 +382,14 @@ public class DBHandler {
 				ps.setInt(2, passwordID);
 				rs=ps.executeQuery();
 				if(rs.next()) { //Password belongs to the given user, delete this security question
+					System.out.println("User valid");
 					ps.close();
 					ps=conn.prepareStatement("DELETE FROM security_question WHERE security_questionID=? AND passwordID=?");
 					ps.setInt(1, questionID);
 					ps.setInt(2, passwordID);
 					ps.executeUpdate();
 					success=true;
+					System.out.println("Deleted");
 				}
 			} catch(SQLException e) {
 				System.out.println(e.getMessage());

@@ -8,8 +8,8 @@ import java.util.Vector;
 
 public class PasswordStrength {
 	private static Vector<String> commonPasswords;
-	
-	public PasswordStrength(String filename) {
+	private static String filename = "commonPasswords.txt";
+	public PasswordStrength() {
 		commonPasswords = new Vector<String>();
 		BufferedReader reader = null;
 		try {
