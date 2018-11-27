@@ -3,6 +3,7 @@ package application2;
 import java.io.IOException;
 
 import client.ClientSocket;
+import client.PasswordStrength;
 import data.LoginResponse;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,30 +30,64 @@ public class NewAccountController
     {
     	password.textProperty().addListener((observable, oldValue, newValue) -> {
     		//Change this part so that it corresponds to the real password strengths
-    		if(password.getLength() < 2)
+    		int pwstrength = PasswordStrength.check(newValue);
+    		if(pwstrength <= 1)
     		{
     			strength.setText("Very Weak");
     			strength.setTextFill(Color.RED);
+    			if(pwstrength == -1) { //Must be more than 8
+    				actiontarget.setText("Master password must be more than 8 characters.");
+    			} else if(pwstrength == -2) { //Cannot be a common password
+    				actiontarget.setText("Master password cannot be a common password.");
+    			} else if(pwstrength == -4) { //3 sequential characters
+    				actiontarget.setText("Master password cannot contain 3 sequential characters.");
+    			} else {
+    				actiontarget.setText("Master password must contain:\r\n" + 
+    						"	8 characters\r\n" + 
+    						"	1 special character\r\n" + 
+    						"	1 uppercase letter\r\n" + 
+    						"	1 lowercase letter\r\n" + 
+    						"	1 number");
+    			}
     		}
-    		else if(password.getLength() < 4)
+    		else if(pwstrength == 2)
     		{
     			strength.setText("Mediocre");
     			strength.setTextFill(Color.ORANGE);
+    			actiontarget.setText("Master password must contain:\r\n" + 
+						"	8 characters\r\n" + 
+						"	1 special character\r\n" + 
+						"	1 uppercase letter\r\n" + 
+						"	1 lowercase letter\r\n" + 
+						"	1 number");
     		}
-    		else if(password.getLength() < 6)
+    		else if(pwstrength == 3)
     		{
     			strength.setText("Fine");
     			strength.setTextFill(Color.YELLOW);
+    			actiontarget.setText("Master password must contain:\r\n" + 
+						"	8 characters\r\n" + 
+						"	1 special character\r\n" + 
+						"	1 uppercase letter\r\n" + 
+						"	1 lowercase letter\r\n" + 
+						"	1 number");
     		}
-    		else if(password.getLength() < 8)
+    		else if(pwstrength == 4)
     		{
     			strength.setText("Strong");
     			strength.setTextFill(Color.LIGHTGREEN);
+    			actiontarget.setText("Master password must contain:\r\n" + 
+						"	8 characters\r\n" + 
+						"	1 special character\r\n" + 
+						"	1 uppercase letter\r\n" + 
+						"	1 lowercase letter\r\n" + 
+						"	1 number");
     		}
-    		else
+    		else if(pwstrength == 5)
     		{
     			strength.setText("Very Strong");
     			strength.setTextFill(Color.DARKGREEN);
+   				actiontarget.setText("Master password meets all criteria.");
     		}
     	});
     }
@@ -91,14 +126,23 @@ public class NewAccountController
 	@FXML protected void handleRegisterAction(ActionEvent event) 
     {
 		String emailRegex = "^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$";
+		int pwstrength = PasswordStrength.check(password.getText());
 		if(username.getText().isEmpty()) {
 			actiontarget.setText("Username cannot be empty.");
-		} else if(password.getText().isEmpty()) { //TODO: check that it meets minimum password strength
+		} else if(password.getText().isEmpty()) {
 			actiontarget.setText("Password cannot be empty.");
 		} else if(!password.getText().equals(confirmPassword.getText())) { 
-			actiontarget.setText("Passwords do not match.");
+			actiontarget.setText("Password fields do not match.");
 		} else if(email.getText().isEmpty()||!email.getText().matches(emailRegex)) {
 			actiontarget.setText("Email is invalid.");
+		} else if(pwstrength != 5) {
+			actiontarget.setText("Master password must contain:\r\n" + 
+					"	8 characters\r\n" + 
+					"	1 special character\r\n" + 
+					"	1 uppercase letter\r\n" + 
+					"	1 lowercase letter\r\n" + 
+					"	1 number");
+			return;
 		} else { //Valid inputs have been used
 			int loginSuccess = ClientSocket.createUser(username.getText(), password.getText(), email.getText());
 			if(loginSuccess == LoginResponse.TYPE_SUCCESS) { // Successful login
