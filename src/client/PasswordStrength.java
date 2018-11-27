@@ -9,7 +9,7 @@ import java.util.Vector;
 public class PasswordStrength {
 	private static Vector<String> commonPasswords;
 	private static String filename = "commonPasswords.txt";
-	public PasswordStrength() {
+	public static void init() {
 		commonPasswords = new Vector<String>();
 		BufferedReader reader = null;
 		try {
@@ -57,7 +57,7 @@ public class PasswordStrength {
 	 * 
 	 * total = 5
 	 */
-	public int check(String password) {
+	public static int check(String password) {
 		int score = 0;
 		
 		//check length
@@ -80,7 +80,7 @@ public class PasswordStrength {
 		int numUpper = 0;
 		int numLower = 0;
 		int numSpecial = 0;
-		int numSpaces = 0;
+//		int numSpaces = 0;
 		int sequentialCount = 1;
 		char prevChar = '\0';
 		for(char character : password.toCharArray()) {
@@ -97,7 +97,7 @@ public class PasswordStrength {
 			}
 			
 			if(Character.isWhitespace(character)) {
-				numSpaces++;
+//				numSpaces++;
 			}else if(Character.isDigit(character)) {
 				numNumbers++;
 			}else if(Character.isUpperCase(character)) {
@@ -111,9 +111,9 @@ public class PasswordStrength {
 			prevChar = character;
 		}
 		
-		if(numSpaces > 0) {
-			return -3;
-		}
+//		if(numSpaces > 0) {
+//			return -3;
+//		}
 		
 		if(numNumbers > 0) {
 			score++;

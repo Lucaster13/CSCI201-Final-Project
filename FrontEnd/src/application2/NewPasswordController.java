@@ -5,6 +5,7 @@ import java.io.IOException;
 import application2.UserHomeController.DisplayPassword;
 import client.ClientSocket;
 import client.GuestInfo;
+import client.PasswordStrength;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,30 +31,64 @@ public class NewPasswordController
     {
     	password.textProperty().addListener((observable, oldValue, newValue) -> {
     		//Change this part so that it corresponds to the real password strengths
-    		if(password.getLength() < 2)
+    		int pwstrength = PasswordStrength.check(newValue);
+    		if(pwstrength <= 1)
     		{
     			strength.setText("Very Weak");
     			strength.setTextFill(Color.RED);
+    			if(pwstrength == -1) { //Must be more than 8
+    				actiontarget.setText("It is recommended to have a password with more than 8 characters.");
+    			} else if(pwstrength == -2) { //Cannot be a common password
+    				actiontarget.setText("It is recommended to use a password that is in the list of commonly used passwords.");
+    			} else if(pwstrength == -4) { //3 sequential characters
+    				actiontarget.setText("It is recommended to have a password that does not have 3 sequential characters.");
+    			} else {
+    				actiontarget.setText("It is recommended for your passwords to contain:\r\n" + 
+    						"	8 characters\r\n" + 
+    						"	1 special character\r\n" + 
+    						"	1 uppercase letter\r\n" + 
+    						"	1 lowercase letter\r\n" + 
+    						"	1 number");
+    			}
     		}
-    		else if(password.getLength() < 4)
+    		else if(pwstrength == 2)
     		{
     			strength.setText("Mediocre");
     			strength.setTextFill(Color.ORANGE);
+				actiontarget.setText("It is recommended for your passwords to contain:\r\n" + 
+						"	8 characters\r\n" + 
+						"	1 special character\r\n" + 
+						"	1 uppercase letter\r\n" + 
+						"	1 lowercase letter\r\n" + 
+						"	1 number");
     		}
-    		else if(password.getLength() < 6)
+    		else if(pwstrength == 3)
     		{
     			strength.setText("Fine");
     			strength.setTextFill(Color.YELLOW);
+				actiontarget.setText("It is recommended for your passwords to contain:\r\n" + 
+						"	8 characters\r\n" + 
+						"	1 special character\r\n" + 
+						"	1 uppercase letter\r\n" + 
+						"	1 lowercase letter\r\n" + 
+						"	1 number");
     		}
-    		else if(password.getLength() < 8)
+    		else if(pwstrength == 4)
     		{
     			strength.setText("Strong");
     			strength.setTextFill(Color.LIGHTGREEN);
+				actiontarget.setText("It is recommended for your passwords to contain:\r\n" + 
+						"	8 characters\r\n" + 
+						"	1 special character\r\n" + 
+						"	1 uppercase letter\r\n" + 
+						"	1 lowercase letter\r\n" + 
+						"	1 number");
     		}
-    		else
+    		else if(pwstrength == 5)
     		{
     			strength.setText("Very Strong");
     			strength.setTextFill(Color.DARKGREEN);
+   				actiontarget.setText("This password is very strong!");
     		}
     	});
     }
@@ -94,8 +129,6 @@ public class NewPasswordController
 	
 	@FXML protected void handleCreateAction(ActionEvent event) 
     {
-        //actiontarget.setText("Sign in button pressed");
-    	//System.out.println("Username: " + username.getText());
 		if(title.getText().isEmpty()) {
 			actiontarget.setText("Please provide an application name");
 			return;
@@ -109,7 +142,7 @@ public class NewPasswordController
 			return;
 		}
 		if(!password.getText().equals(confirmPassword.getText())) {
-			actiontarget.setText("Passwords do not match. Make sure you typed them in correctly!");
+			actiontarget.setText("Password fields do not match. Make sure you typed them in correctly!");
 			return;
 		}
 		DisplayPassword dp=null;
